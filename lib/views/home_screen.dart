@@ -1,6 +1,6 @@
 import './personal/personal_page.dart';
-import './shelf/shelf_page.dart';
-import './store/store_page.dart';
+import 'shelf/shelf_page.dart';
+import 'store/store_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
