@@ -1,7 +1,8 @@
-import 'package:atrons_mobile/theme/app_theme.dart';
-import 'package:atrons_mobile/utils/constants.dart';
-import 'package:atrons_mobile/views/home_screen.dart';
 import 'package:flutter/material.dart';
+
+import './theme/app_theme.dart';
+import './utils/constants.dart';
+import './views/home_screen.dart';
 
 void main() {
   runApp(MyApp());

@@ -16,6 +16,8 @@ dependencies:
   objectdb: ^1.0.10+1
   provider: ^4.3.2+2
   shared_preferences: ^0.5.12+2
+  uuid: ^2.2.2
+  flutter_spinkit: ^4.1.2+1
 
 dev_dependencies:
   flutter_test:
