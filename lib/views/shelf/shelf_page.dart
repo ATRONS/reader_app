@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../fragments/body_builder.dart';
-import '../../fragments/book_card.dart';
+import '../../fragments/book.dart';
 // import '../../fragments/loading.dart';
 // import '../../utils/router.dart';
 // import 'package:provider/provider.dart';
@@ -11,104 +11,89 @@ class ShelfPage extends StatefulWidget {
 }
 
 class _ShelfPageState extends State<ShelfPage> {
-
   @override
   Widget build(BuildContext context) {
-        return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              'Atrons',
-            ),
-          ),
-          body: BodyBuilder(
-            child: _buildBodyList(),
-          ),
-        );
-  }
-
-  _buildBodyList() {
-    return ListView.builder(
-      itemCount: 13,
-      itemBuilder: (BuildContext context, int index) {
-        
-        if (index < 10) {
-          return SizedBox();
-        }
-
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.0),
-          child: Column(
-            children: <Widget>[
-              _buildSectionHeader(),
-              SizedBox(height: 10.0),
-              _buildSectionBookList(),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  _buildSectionHeader() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Flexible(
-            child: Text(
-              'Fiction',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w500,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-            //   MyRouter.pushPage(
-            //     context,
-            //     Genre(
-            //       title: 'Crime and Punishment',
-            //       url: 'www.google.com',
-            //     ),
-            //   );
-            },
-            child: Text(
-              'See All',
-              style: TextStyle(
-                color: Theme.of(context).accentColor,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Atrons',
+        ),
+      ),
+      body: BodyBuilder(
+        child: ListView(
+          children: <Widget>[
+            _buildCurrentMaterial(),
+            _buildBodyList()
+          ],
+        ),
       ),
     );
   }
 
-  _buildSectionBookList() {
-        return Container(
-            height: 200.0,
-            child: Center(
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 5.0,
-                      vertical: 10.0,
-                    ),
-                    child: BookCard(),
-                  );
-                },
-              ),
+  _buildCurrentMaterial(){
+    return Row(children: <Widget>[
+      Padding(
+            padding: EdgeInsets.only(left: 20.0),
+            child: BookItem(
+              img: "kebede",
+              title: "",
             ),
-          ); }
+        ),
+        Container(
+          height: 100,
+          width: 230,
+          color: Colors.grey[200],
+          alignment: Alignment.center,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                child: Text("War and Peace by Leo Tolstoy", style: TextStyle(fontWeight: FontWeight.bold),),
+                padding: EdgeInsets.only(top:10, bottom:10, left: 5, right: 5),
+              ),
+              Container(
+                width: 230,
+                height: 3,
+                  child: LinearProgressIndicator(
+                    value: 0.6,
+                    backgroundColor: Colors.blue[100],
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),),
+            ], 
+          )
+        )
+    ],);
   }
+
+  _buildBodyList() {
+    return GridView.builder(
+      padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
+      shrinkWrap: true,
+      itemCount: 6,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: 200 / 340,
+      ),
+      itemBuilder: (BuildContext context, int index) {
+        if (index == 5) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+            child:Icon(
+              Icons.add,
+              color: Colors.grey,
+              size: 100.0,
+            ),
+          );
+        } else {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+            child: BookItem(
+              img: "kebede",
+              title: "war and peace",
+            ),
+          );
+        }
+      },
+    );
+  }
+}

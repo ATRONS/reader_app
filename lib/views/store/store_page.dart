@@ -33,12 +33,7 @@ class _StorePageState extends State<StorePage>
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          'Store',
-          style: TextStyle(
-            fontSize: 20.0,
-          ),
-        ),
+        title: _buildSearchSection(),
       ),
       body: _buildBody(),
     );
@@ -50,13 +45,16 @@ class _StorePageState extends State<StorePage>
 
   Widget _buildBodyList() {
     return RefreshIndicator(
+      // ignore: missing_return
       onRefresh: () {},
       child: ListView(
         children: <Widget>[
-          _buildSearchSection(),
-          SizedBox(height: 20.0),
+          // _buildSearchSection(),
+          SizedBox(height: 10.0),
           _buildMaterialSection(),
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
+          Divider(color: Colors.black38),
+          SizedBox(height: 10.0),
           _buildSectionTitle('Generes'),
           SizedBox(height: 10.0),
           _buildGenreSection(),
@@ -87,8 +85,8 @@ class _StorePageState extends State<StorePage>
 
   _buildSearchSection() {
     return Container(
-      height: 50.0,
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+      height: 40.0,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Center(
           child: TextField(
         decoration: InputDecoration(
@@ -99,7 +97,8 @@ class _StorePageState extends State<StorePage>
               borderSide: const BorderSide(color: Colors.grey, width: 0.0),
             ),
             filled: true,
-            hintText: 'search'),
+            contentPadding: EdgeInsets.only(top:3, left: 5),
+            hintText: 'search',),
       )),
     );
   }
