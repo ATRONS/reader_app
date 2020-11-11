@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 // import './loading.dart';
 // import 'package:flutter_ebook_app/models/category.dart';
 // import 'package:flutter_ebook_app/util/router.dart';
-// import 'package:uuid/uuid.dart';
+import 'package:uuid/uuid.dart';
 
 // import '../views/details/details.dart';
 
@@ -20,10 +20,10 @@ class BookListItem extends StatelessWidget {
     @required this.desc
   }) : super(key: key);
 
-//   static final uuid = Uuid();
-//   final String imgTag = uuid.v4();
-//   final String titleTag = uuid.v4();
-//   final String authorTag = uuid.v4();
+  static final uuid = Uuid();
+  final String imgTag = uuid.v4();
+  final String titleTag = uuid.v4();
+  final String authorTag = uuid.v4();
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +55,12 @@ class BookListItem extends StatelessWidget {
                 borderRadius: BorderRadius.all(
                   Radius.circular(10.0),
                 ),
-                child: Hero(
-                  tag: 'imgTag',
                   child: Image.asset(
                       'assets/images/warandpeace.jpg',
                       fit: BoxFit.cover,
                       height: 150.0,
                       width: 100.0,
                     ),
-                ),
               ),
             ),
             SizedBox(width: 10.0),
@@ -73,12 +70,11 @@ class BookListItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Hero(
-                    tag: 'titleTag',
-                    child: Material(
+                
+                    Material(
                       type: MaterialType.transparency,
                       child: Text(
-                        '${title.replaceAll(r'\', '')}',
+                        'War and Peace',
                         style: TextStyle(
                           fontSize: 17.0,
                           fontWeight: FontWeight.bold,
@@ -88,16 +84,13 @@ class BookListItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  ),
                   SizedBox(
                     height: 5,
                   ),
-                  Hero(
-                    tag: 'authorTag',
-                    child: Material(
+                 Material(
                       type: MaterialType.transparency,
                       child: Text(
-                        '$author',
+                        'Leo Tolstoy',
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.w800,
@@ -105,7 +98,6 @@ class BookListItem extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
                   SizedBox(height: 10.0),
                   Text(
                     '${desc.length < 100 ? desc : desc.substring(0, 100)}...'

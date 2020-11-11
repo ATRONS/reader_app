@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import '../utils/router.dart';
 // import './loading_widget.dart';
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
+import '../views/details/details.dart';
 
 class BookCard extends StatelessWidget {
   BookCard({
     Key key
   }) : super(key: key);
 
-  static final uuid = Uuid();
-  final String imgTag = uuid.v4();
-  final String titleTag = uuid.v4();
-  final String authorTag = uuid.v4();
+  // static final uuid = Uuid();
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +27,19 @@ class BookCard extends StatelessWidget {
           borderRadius: BorderRadius.all(
             Radius.circular(10.0),
           ),
-          onTap: () {},
+          onTap: () {
+           MyRouter.pushPage(context, Details());
+          },
           child: ClipRRect(
             borderRadius: BorderRadius.all(
               Radius.circular(10.0),
             ),
-            child: Hero(
-              tag: imgTag,
+            
               child: Image.asset(
                   'assets/images/warandpeace.jpg',
                   fit: BoxFit.cover,
                 )
-            ),
+            
           ),
         ),
       ),
