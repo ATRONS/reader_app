@@ -1,31 +1,9 @@
-// import 'package:flutter/material.dart';
-
-// class Details extends StatefulWidget {
-//   @override
-//   _DetailsState createState() => _DetailsState();
-// }
-
-// class _DetailsState extends State<Details> {
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text("Details of Book"),),
-//       body: Center(
-//         child: Text("This is supposed to be the details page"),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:epub_viewer/epub_viewer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+// import 'package:flutter_icons/flutter_icons.dart';
 import '../../fragments/book_list_item.dart';
+import '../../fragments/descriptionTextWidget.dart';
+import '../../fragments/review_body.dart';
 
 class Details extends StatefulWidget {
   Details({
@@ -53,13 +31,7 @@ class _DetailsState extends State<Details> {
               Icons.favorite,
               color: Theme.of(context).iconTheme.color,
             ),
-          ),
-          IconButton(
-            onPressed: () => {},
-            icon: Icon(
-              Feather.share,
-            ),
-          ),
+          )
         ],
       ),
       body: ListView(
@@ -68,17 +40,29 @@ class _DetailsState extends State<Details> {
           SizedBox(height: 10.0),
           _buildImageTitleSection(),
           SizedBox(height: 30.0),
-          _buildSectionTitle('Book Description'),
+          _buildSectionTitle('Synopsis'),
           _buildDivider(),
           SizedBox(height: 10.0),
-          // DescriptionTextWidget(
-          //   text: '${widget.entry.summary.t}',
-          // ),
+          DescriptionTextWidget(
+            text:
+                'this is the description for the book which may be lo this is the description for the book which may be lo this is the description for the book which may be lo this is the description for the book which may be lo lo this is the description for the book which may be lo this is the description for the book which may be lo  lo this is the description for the book which may be lo this is the description for the book which may be lo  lo this is the description for the book which may be lo this is the description for the book which may be lo ng or not. but i want to test the thing so heres ..',
+          ),
           SizedBox(height: 30.0),
-          _buildSectionTitle('More from Author'),
+          _buildSectionTitle('Tags'),
+          SizedBox(
+            height: 10.0,
+          ),
+          _buildTagsSection(),
+          SizedBox(height: 30.0),
+          _buildSectionTitleWithMore('More from Author'),
           _buildDivider(),
           SizedBox(height: 10.0),
           _buildMoreBook(),
+          SizedBox(height: 30.0),
+          _buildSectionTitleWithMore('Reviews'),
+          _buildDivider(),
+          SizedBox(height: 10.0),
+          _buildSectionReview(),
         ],
       ),
     );
@@ -113,7 +97,7 @@ class _DetailsState extends State<Details> {
                 Material(
                   type: MaterialType.transparency,
                   child: Text(
-                    'widget.entry.title.t.replaceAll',
+                    'Crime and Punishment',
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
@@ -125,7 +109,7 @@ class _DetailsState extends State<Details> {
                 Material(
                   type: MaterialType.transparency,
                   child: Text(
-                    'widget.entry.author.name.t',
+                    'Fyodor Dostoevsky',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w800,
@@ -134,10 +118,65 @@ class _DetailsState extends State<Details> {
                   ),
                 ),
                 SizedBox(height: 5.0),
-                _buildCategory(context),
+                Material(
+                  type: MaterialType.transparency,
+                  child: Text(
+                    'Rating 4.5',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                    maxLines: 3,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Material(
+                  type: MaterialType.transparency,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Selling price',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                        maxLines: 3,
+                      ),
+                      Text(
+                        '45 ETB',
+                        style: TextStyle(
+                            fontSize: 14.0, fontWeight: FontWeight.bold),
+                        maxLines: 3,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 5.0),
+                Material(
+                  type: MaterialType.transparency,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Renting price',
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                        maxLines: 3,
+                      ),
+                      Text(
+                        '4 ETB/Day',
+                        style: TextStyle(
+                            fontSize: 14.0, fontWeight: FontWeight.bold),
+                        maxLines: 3,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.0),
                 Center(
                   child: Container(
-                    height: 20.0,
+                    color: Theme.of(context).accentColor,
+                    height: 30.0,
                     width: MediaQuery.of(context).size.width,
                     child: _buildDownloadReadButton(context),
                   ),
@@ -152,7 +191,7 @@ class _DetailsState extends State<Details> {
 
   _buildSectionTitle(String title) {
     return Text(
-      'More From Author',
+      '$title',
       style: TextStyle(
         color: Theme.of(context).accentColor,
         fontSize: 20.0,
@@ -161,11 +200,84 @@ class _DetailsState extends State<Details> {
     );
   }
 
+  _buildSectionTitleWithMore(String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          '$title',
+          style: TextStyle(
+            color: Theme.of(context).accentColor,
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          'More',
+          style: TextStyle(
+            color: Theme.of(context).accentColor,
+            fontSize: 13.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _buildTagsSection() {
+    return Container(
+      height: 50.0,
+      child: Center(
+        child: ListView.builder(
+          primary: false,
+          padding: EdgeInsets.symmetric(horizontal: 15.0),
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          shrinkWrap: true,
+          itemBuilder: (BuildContext context, int index) {
+            // Link link = homeProvider.top.feed.link[index];
+
+            // We don't need the tags from 0-9 because
+            // they are not categories
+
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5.0),
+                  ),
+                ),
+                child: InkWell(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(
+                        'fiction',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   _buildMoreBook() {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: 4,
+      itemCount: 2,
       itemBuilder: (BuildContext context, int index) {
         return Padding(
           padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -173,6 +285,24 @@ class _DetailsState extends State<Details> {
             title: 'entry.title.t',
             author: 'entry.author.name.t',
             desc: 'this book describes about thee war on the 2nd and the',
+          ),
+        );
+      },
+    );
+  }
+
+  _buildSectionReview() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: 2,
+      itemBuilder: (BuildContext context, int index) {
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 5.0),
+          child: MaterialReview(
+            username: "mek_user",
+            comment:
+                "great book. every single person should read this. a step forward to the future before everyone else ..",
           ),
         );
       },
@@ -198,52 +328,8 @@ class _DetailsState extends State<Details> {
         await _openMaterial(context);
       },
       child: Text(
-        'Download',
+        'Buy/Rent',
       ),
     );
   }
-}
-
-_buildCategory(BuildContext context) {
-  return Container(
-    height: 95.0,
-    child: GridView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: 4,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 210 / 80,
-      ),
-      itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-              border: Border.all(
-                color: Theme.of(context).accentColor,
-              ),
-            ),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2.0),
-                child: Text(
-                  'cat.label',
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontSize: 10.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    ),
-  );
 }
