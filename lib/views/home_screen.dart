@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
           controller: _pageController,
           onPageChanged: onPageChanged,
           children: <Widget>[
-            ShelfPage(),
+            ShelfPage(navigationTapped),
             StorePage(),
             PersonalPage(),
           ],
