@@ -1,4 +1,8 @@
+import 'package:atrons_mobile/models/genere.dart';
+import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/view_models/material_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import './book_card.dart';
 import '../theme/app_theme.dart';
 import '../utils/router.dart';
@@ -7,13 +11,17 @@ import '../views/genres/genre.dart';
 class Booktab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MaterialProvider>(context, listen: false);
+    final generes = provider.generes;
+    final popular = provider.popular;
+
     return Column(
       children: <Widget>[
         _buildSectionTitle('Genres'),
         SizedBox(height: 10.0),
-        _buildGenreSection(),
+        _buildGenreSection(generes),
         SizedBox(height: 20.0),
-        _buildNewSection(),
+        _buildNewSection(popular),
         SizedBox(height: 10.0),
       ],
     );
@@ -44,7 +52,7 @@ class Booktab extends StatelessWidget {
     );
   }
 
-  _buildGenreSection() {
+  _buildGenreSection(List<Genere> generes) {
     return Container(
       height: 50.0,
       child: Center(
@@ -52,14 +60,9 @@ class Booktab extends StatelessWidget {
           primary: false,
           padding: EdgeInsets.symmetric(horizontal: 15.0),
           scrollDirection: Axis.horizontal,
-          itemCount: 4,
+          itemCount: generes.length,
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
-            // Link link = homeProvider.top.feed.link[index];
-
-            // We don't need the tags from 0-9 because
-            // they are not categories
-
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
               child: Container(
@@ -76,14 +79,14 @@ class Booktab extends StatelessWidget {
                   onTap: () {
                     MyRouter.pushPage(
                       context,
-                      Genre(title: 'Fiction'),
+                      Genre(title: generes[index].name),
                     );
                   },
                   child: Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
                       child: Text(
-                        'Biography',
+                        generes[index].name,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -99,24 +102,29 @@ class Booktab extends StatelessWidget {
     );
   }
 
-  _buildNewSection() {
+  _buildNewSection(Map<String, List<MiniMaterial>> popular) {
+    final generes = [];
+    final List<List<MiniMaterial>> materials = [];
+
+    popular.forEach((key, value) {
+      generes.add(key);
+      materials.add(value);
+    });
+
     return ListView.builder(
       primary: false,
       padding: EdgeInsets.symmetric(horizontal: 0.0),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: 13,
+      itemCount: popular.length,
       itemBuilder: (BuildContext context, int index) {
-        if (index < 10) {
-          return SizedBox();
-        }
         return Padding(
           padding: EdgeInsets.symmetric(vertical: 10.0),
           child: Column(
             children: <Widget>[
-              _buildSectionHeader(),
+              _buildSectionHeader(generes[index]),
               SizedBox(height: 10.0),
-              _buildSectionBookList(),
+              _buildSectionBookList(materials[index]),
             ],
           ),
         );
@@ -124,7 +132,7 @@ class Booktab extends StatelessWidget {
     );
   }
 
-  _buildSectionHeader() {
+  _buildSectionHeader(String genereName) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(
@@ -132,7 +140,7 @@ class Booktab extends StatelessWidget {
         children: <Widget>[
           Flexible(
             child: Text(
-              'Popular of Fiction',
+              'Popular of $genereName',
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.w500,
@@ -164,14 +172,14 @@ class Booktab extends StatelessWidget {
     );
   }
 
-  _buildSectionBookList() {
+  _buildSectionBookList(List<MiniMaterial> materials) {
     return Container(
       height: 200.0,
       child: Center(
         child: ListView.builder(
           padding: EdgeInsets.symmetric(horizontal: 15.0),
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: materials.length,
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
@@ -179,7 +187,7 @@ class Booktab extends StatelessWidget {
                 horizontal: 5.0,
                 vertical: 10.0,
               ),
-              child: BookCard(),
+              child: BookCard(material: materials[index]),
             );
           },
         ),

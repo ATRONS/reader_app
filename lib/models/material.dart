@@ -1,3 +1,5 @@
+import 'package:atrons_mobile/utils/api.dart';
+
 class MiniMaterial {
   String id, title, subtitle, coverImgUrl;
 
@@ -5,5 +7,5 @@ class MiniMaterial {
       : id = json['_id'],
         title = json['title'],
         subtitle = json['subtitle'],
-        coverImgUrl = json['cover_img_url'];
+        coverImgUrl = Api.baseUrl + json['cover_img_url'];
 }

@@ -1,13 +1,10 @@
+import 'package:atrons_mobile/view_models/material_provider.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import '../../fragments/body_builder.dart';
 import '../../fragments/book_tab.dart';
 import '../../fragments/book_list_item.dart';
 import '../../fragments/megazine_list_item.dart';
-// import '../../utils/router.dart';
-// import 'package:flutter_ebook_app/view_models/home_provider.dart';
-// import 'package:flutter_ebook_app/views/genre/genre.dart';
-// import 'package:provider/provider.dart';
 
 class StorePage extends StatefulWidget {
   @override
@@ -22,25 +19,33 @@ class _StorePageState extends State<StorePage>
   @override
   void initState() {
     super.initState();
-    // SchedulerBinding.instance.addPostFrameCallback(
-    //   (_) => Provider.of<HomeProvider>(context, listen: false).getFeeds(),
-    // );
+    Provider.of<MaterialProvider>(context, listen: false).getInitialBookData();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: _buildSearchSection(),
       ),
-      body: _buildBody(),
-    );
-  }
+      body: Selector<MaterialProvider, LoadingState>(
+        selector: (context, model) => model.loadingState,
+        builder: (context, state, child) {
+          print(state);
+          if (state == LoadingState.loading) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (state == LoadingState.failed) {
+            return Center(child: Text('Loading failed'));
+          }
 
-  Widget _buildBody() {
-    return BodyBuilder(child: _buildBodyList());
+          return _buildBodyList();
+        },
+      ),
+    );
   }
 
   Widget _buildBodyList() {

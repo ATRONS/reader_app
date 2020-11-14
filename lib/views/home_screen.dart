@@ -62,9 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    print('in herererer');
-    var provider = Provider.of<MaterialProvider>(context, listen: false);
-    provider.getInitialBookData();
   }
 
   @override
