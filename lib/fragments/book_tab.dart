@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import './book_card.dart';
 import '../theme/app_theme.dart';
+import '../utils/router.dart';
+import '../views/genres/genre.dart';
 
 class Booktab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _buildSectionTitle('Generes'),
+        _buildSectionTitle('Genres'),
         SizedBox(height: 10.0),
         _buildGenreSection(),
         SizedBox(height: 20.0),
@@ -30,6 +32,13 @@ class Booktab extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
+          Text(
+            'See All',
+            style: TextStyle(
+              color: CustomTheme.lightAccent,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
         ],
       ),
     );
@@ -43,16 +52,13 @@ class Booktab extends StatelessWidget {
           primary: false,
           padding: EdgeInsets.symmetric(horizontal: 15.0),
           scrollDirection: Axis.horizontal,
-          itemCount: 14,
+          itemCount: 4,
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
             // Link link = homeProvider.top.feed.link[index];
 
             // We don't need the tags from 0-9 because
             // they are not categories
-            if (index < 10) {
-              return SizedBox();
-            }
 
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
@@ -68,19 +74,16 @@ class Booktab extends StatelessWidget {
                     Radius.circular(20.0),
                   ),
                   onTap: () {
-                    // MyRouter.pushPage(
-                    //   context,
-                    //   Genre(
-                    //     title: '${link.title}',
-                    //     url: link.href,
-                    //   ),
-                    // );
+                    MyRouter.pushPage(
+                      context,
+                      Genre(title: 'Fiction'),
+                    );
                   },
                   child: Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
                       child: Text(
-                        'war and peace',
+                        'Biography',
                         style: TextStyle(
                           color: Colors.white,
                         ),

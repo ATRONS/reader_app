@@ -1,3 +1,6 @@
+import 'package:atrons_mobile/view_models/material_provider.dart';
+import 'package:provider/provider.dart';
+
 import './personal/personal_page.dart';
 import 'shelf/shelf_page.dart';
 import 'store/store_page.dart';
@@ -59,6 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+    print('in herererer');
+    var provider = Provider.of<MaterialProvider>(context, listen: false);
+    provider.getInitialBookData();
   }
 
   @override

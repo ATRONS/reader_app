@@ -62,6 +62,7 @@ class _ShelfPageState extends State<ShelfPage> {
                 Container(
                   width: 230,
                   height: 3,
+                  padding: EdgeInsets.symmetric(horizontal: 5),
                   child: LinearProgressIndicator(
                     value: 0.6,
                     backgroundColor: Colors.blue[100],

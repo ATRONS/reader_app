@@ -49,7 +49,6 @@ class _StorePageState extends State<StorePage>
       onRefresh: () {},
       child: ListView(
         children: <Widget>[
-          // _buildSearchSection(),
           SizedBox(height: 10.0),
           _buildMaterialSection(),
           SizedBox(height: 10.0),
