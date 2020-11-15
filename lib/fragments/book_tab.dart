@@ -1,12 +1,13 @@
 import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/view_models/material_provider.dart';
+import 'package:atrons_mobile/views/genres/listOfGenre.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './book_card.dart';
 import '../theme/app_theme.dart';
 import '../utils/router.dart';
-import '../views/genres/genre.dart';
+import '../views/genres/booksInGenre.dart';
 
 class Booktab extends StatelessWidget {
   @override
@@ -17,7 +18,7 @@ class Booktab extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        _buildSectionTitle('Genres'),
+        _buildSectionTitle('Genres', context),
         SizedBox(height: 10.0),
         _buildGenreSection(generes),
         SizedBox(height: 20.0),
@@ -27,7 +28,7 @@ class Booktab extends StatelessWidget {
     );
   }
 
-  _buildSectionTitle(String title) {
+  _buildSectionTitle(String title, BuildContext ctx) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(
@@ -40,11 +41,19 @@ class Booktab extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          Text(
-            'See All',
-            style: TextStyle(
-              color: CustomTheme.lightAccent,
-              fontWeight: FontWeight.w400,
+          InkWell(
+            onTap: () {
+              MyRouter.pushPage(
+                ctx,
+                ListOfGenre(),
+              );
+            },
+            child: Text(
+              'See All',
+              style: TextStyle(
+                color: CustomTheme.lightAccent,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ],
@@ -79,7 +88,7 @@ class Booktab extends StatelessWidget {
                   onTap: () {
                     MyRouter.pushPage(
                       context,
-                      Genre(title: generes[index].name),
+                      BooksInGenre(title: generes[index].name),
                     );
                   },
                   child: Center(
