@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 class Api {
   Dio dio = Dio();
-  static String baseUrl = 'http://10.6.152.134:5000/api/v1/';
+  static String baseUrl = 'http://10.6.210.6:5000/api/v1/';
   static String readerBaseUrl = baseUrl + '/reader';
   static String initialData = '/initialData';
 
