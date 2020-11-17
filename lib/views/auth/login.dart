@@ -1,3 +1,5 @@
+import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -84,17 +86,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildButtons() {
-    return Container(
-        height: 50,
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Theme.of(context).accentColor),
-        child: Center(
-          child: Text(
-            "Login",
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
+    return InkWell(
+      onTap: () {
+        MyRouter.pushPageReplacement(context, HomeScreen());
+      },
+      child: Container(
+          height: 50,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Theme.of(context).accentColor),
+          child: Center(
+            child: Text(
+              "Login",
+              style: TextStyle(color: Colors.white),
+            ),
+          )),
+    );
   }
 }
