@@ -1,9 +1,10 @@
 import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/utils/api.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
-enum LoadingState { failed, loading, success }
+enum LoadingState { failed, loading, success, loadingMore }
 
 class MaterialProvider extends ChangeNotifier {
   Api api = Api();
@@ -13,34 +14,44 @@ class MaterialProvider extends ChangeNotifier {
   Map<String, List<MiniMaterial>> _popular;
   Map<String, List<MiniMaterial>> get popular => _popular;
 
-  LoadingState loadingState = LoadingState.loading;
+  LoadingState initialDataLoadingState = LoadingState.loading;
+  LoadingState bookLoadingState = LoadingState.loading;
+  LoadingState magazineLoadingState = LoadingState.loading;
+  LoadingState newspapaerLoadingState = LoadingState.loading;
 
-  Future getInitialBookData() async {
-    print('got here');
-    Map<String, dynamic> response = await api.getInitialBooks();
+  void loadInitialData() {
+    api.getInitialData().then((Response response) {
+      final Map<String, dynamic> body = response.data;
 
-    if (!response["success"]) {
-      loadingState = LoadingState.failed;
-      print('request failed');
+      if (!body['success']) {
+        initialDataLoadingState = LoadingState.failed;
+        print(body['message']);
+        return notifyListeners();
+      }
+
+      _generes = List<dynamic>.from(body['data']['generes'])
+          .map((genere) => Genere.fromJSON(genere))
+          .toList();
+
+      _popular = Map();
+
+      Map<String, List<dynamic>>.from(body['data']['popular'])
+          .forEach((genereId, materials) {
+        var mini =
+            materials.map((json) => MiniMaterial.fromJSON(json)).toList();
+        return _popular[genereId] = mini;
+      });
+
+      initialDataLoadingState = LoadingState.success;
       return notifyListeners();
-    }
-
-    _generes = List<dynamic>.from(response['data']['generes'])
-        .map((genere) => Genere.fromJSON(genere))
-        .toList();
-
-    _popular = Map();
-
-    Map<String, List<dynamic>>.from(response['data']['popular'])
-        .forEach((genereId, materials) {
-      var mini = materials.map((json) => MiniMaterial.fromJSON(json)).toList();
-      return _popular[genereId] = mini;
+    }).catchError((err) {
+      initialDataLoadingState = LoadingState.failed;
+      print(err);
+      return notifyListeners();
     });
-
-    loadingState = LoadingState.success;
-    print('finished loading');
-    notifyListeners();
   }
 
-  void getMaterialDetail(String id) {}
+  void getMaterialDetail(String id) {
+    api.getMaterialDetail(id).then((value) {}).catchError((err) {});
+  }
 }

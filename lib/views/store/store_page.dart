@@ -19,12 +19,13 @@ class _StorePageState extends State<StorePage>
   @override
   void initState() {
     super.initState();
-    Provider.of<MaterialProvider>(context, listen: false).getInitialBookData();
+    Provider.of<MaterialProvider>(context, listen: false).loadInitialData();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final matProvider = Provider.of<MaterialProvider>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -32,14 +33,26 @@ class _StorePageState extends State<StorePage>
         title: _buildSearchSection(),
       ),
       body: Selector<MaterialProvider, LoadingState>(
-        selector: (context, model) => model.loadingState,
+        selector: (context, model) => model.initialDataLoadingState,
         builder: (context, state, child) {
-          print(state);
           if (state == LoadingState.loading) {
             return Center(child: CircularProgressIndicator());
           }
           if (state == LoadingState.failed) {
-            return Center(child: Text('Loading failed'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Loading failed'),
+                  FlatButton(
+                    onPressed: () {
+                      matProvider.loadInitialData();
+                    },
+                    child: Text('Retry'),
+                  ),
+                ],
+              ),
+            );
           }
 
           return _buildBodyList();

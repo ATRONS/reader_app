@@ -95,7 +95,7 @@ class Booktab extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
                       child: Text(
-                        generes[index].name,
+                        generes[index].getGenereName(GenereLang.english),
                         style: TextStyle(
                           color: Colors.white,
                         ),
