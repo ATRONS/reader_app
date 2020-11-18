@@ -27,7 +27,7 @@ class BookCard extends StatelessWidget {
             Radius.circular(10.0),
           ),
           onTap: () {
-            MyRouter.pushPage(context, Details());
+            MyRouter.pushPage(context, Details(id: material.id));
           },
           child: ClipRRect(
               borderRadius: BorderRadius.all(

@@ -2,14 +2,16 @@ import 'package:dio/dio.dart';
 
 class Api {
   Dio dio = Dio();
-  static String baseUrl = 'http://192.168.43.113:5000/api/v1/';
+  static String baseUrl = 'http://10.6.217.249:5000/api/v1';
   static String readerBaseUrl = baseUrl + '/reader';
+  static String mediaBaseUrl = baseUrl + '/media';
 
   static String initialDataUrl = readerBaseUrl + '/initialData';
   static String materialsUrl = readerBaseUrl + '/materials';
   static String providersUrl = readerBaseUrl + '/providers';
+  static String downloadMaterialUrl = mediaBaseUrl + '/materials';
 
-  Future<Response> getInitialData() async {
+  Future<Response> getInitialData() {
     return dio.get(initialDataUrl);
   }
 
@@ -18,9 +20,8 @@ class Api {
     return dio.get(url);
   }
 
-  Future<Map<String, dynamic>> getMaterialDetail(String id) async {
-    final url = '$materialsUrl/id';
-    final res = await dio.get(url);
-    return res.data;
+  Future<Response> getMaterialDetail(String id) {
+    final url = '$materialsUrl/$id';
+    return dio.get(url);
   }
 }

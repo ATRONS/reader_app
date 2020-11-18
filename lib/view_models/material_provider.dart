@@ -3,8 +3,9 @@ import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/utils/api.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-enum LoadingState { failed, loading, success, loadingMore }
+import 'loading_state.dart';
 
 class MaterialProvider extends ChangeNotifier {
   Api api = Api();
@@ -37,9 +38,9 @@ class MaterialProvider extends ChangeNotifier {
 
       Map<String, List<dynamic>>.from(body['data']['popular'])
           .forEach((genereId, materials) {
-        var mini =
+        final mini =
             materials.map((json) => MiniMaterial.fromJSON(json)).toList();
-        return _popular[genereId] = mini;
+        _popular[genereId] = mini;
       });
 
       initialDataLoadingState = LoadingState.success;
@@ -49,9 +50,5 @@ class MaterialProvider extends ChangeNotifier {
       print(err);
       return notifyListeners();
     });
-  }
-
-  void getMaterialDetail(String id) {
-    api.getMaterialDetail(id).then((value) {}).catchError((err) {});
   }
 }

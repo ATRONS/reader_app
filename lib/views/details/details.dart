@@ -1,70 +1,102 @@
+import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/utils/api.dart';
+import 'package:atrons_mobile/utils/constants.dart';
+import 'package:atrons_mobile/view_models/detail_provider.dart';
+import 'package:atrons_mobile/view_models/loading_state.dart';
 import 'package:epub_viewer/epub_viewer.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
 import '../../fragments/book_list_item.dart';
 import '../../fragments/descriptionTextWidget.dart';
 import '../../fragments/review_body.dart';
 
 class Details extends StatefulWidget {
-  Details({
-    Key key,
-  }) : super(key: key);
+  final String id;
+  Details({Key key, @required this.id}) : super(key: key);
 
   @override
   _DetailsState createState() => _DetailsState();
 }
 
 class _DetailsState extends State<Details> {
+  bool isDownloaded = false;
+
   @override
   void initState() {
+    Provider.of<DetailProvider>(context, listen: false)
+        .getMaterialDetail(widget.id);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.favorite,
-              color: Theme.of(context).iconTheme.color,
-            ),
-          )
-        ],
-      ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        children: <Widget>[
-          SizedBox(height: 10.0),
-          _buildImageTitleSection(),
-          SizedBox(height: 30.0),
-          _buildSectionTitle('Synopsis'),
-          _buildDivider(),
-          SizedBox(height: 10.0),
-          DescriptionTextWidget(
-            text:
-                'this is the description for the book which may be lo this is the description for the book which may be lo this is the description for the book which may be lo this is the description for the book which may be lo lo this is the description for the book which may be lo this is the description for the book which may be lo  lo this is the description for the book which may be lo this is the description for the book which may be lo  lo this is the description for the book which may be lo this is the description for the book which may be lo ng or not. but i want to test the thing so heres ..',
-          ),
-          SizedBox(height: 30.0),
-          _buildSectionTitle('Tags'),
-          SizedBox(
-            height: 10.0,
-          ),
-          _buildTagsSection(),
-          SizedBox(height: 30.0),
-          _buildSectionTitleWithMore('More from Author'),
-          _buildDivider(),
-          SizedBox(height: 10.0),
-          _buildMoreBook(),
-          SizedBox(height: 30.0),
-          _buildSectionTitleWithMore('Reviews'),
-          _buildDivider(),
-          SizedBox(height: 10.0),
-          _buildSectionReview(),
-        ],
-      ),
+        appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.favorite,
+                color: Theme.of(context).iconTheme.color,
+              ),
+            )
+          ],
+        ),
+        body: Selector<DetailProvider, LoadingState>(
+            selector: (context, model) => model.loadingState,
+            builder: (context, state, child) {
+              if (state == LoadingState.loading) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (state == LoadingState.failed) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(Constants.errMsg1),
+                      FlatButton(
+                        onPressed: () {},
+                        child: Text(Constants.retry),
+                      )
+                    ],
+                  ),
+                );
+              }
+
+              final detail = Provider.of<DetailProvider>(context, listen: false)
+                  .selectedMaterial;
+              return _buildDetailView(detail);
+            }));
+  }
+
+  Widget _buildDetailView(MaterialDetail detail) {
+    return ListView(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      children: <Widget>[
+        SizedBox(height: 10.0),
+        _buildImageTitleSection(detail),
+        SizedBox(height: 30.0),
+        _buildSectionTitle('Synopsis'),
+        _buildDivider(),
+        SizedBox(height: 10.0),
+        DescriptionTextWidget(text: detail.synopsis),
+        SizedBox(height: 30.0),
+        _buildSectionTitle('Tags'),
+        SizedBox(
+          height: 10.0,
+        ),
+        _buildTagsSection(),
+        SizedBox(height: 30.0),
+        _buildSectionTitleWithMore('More from Author'),
+        _buildDivider(),
+        SizedBox(height: 10.0),
+        _buildMoreBook(),
+        SizedBox(height: 30.0),
+        _buildSectionTitleWithMore('Reviews'),
+        _buildDivider(),
+        SizedBox(height: 10.0),
+        _buildSectionReview(),
+      ],
     );
   }
 
@@ -74,14 +106,15 @@ class _DetailsState extends State<Details> {
     );
   }
 
-  _buildImageTitleSection() {
+  _buildImageTitleSection(MaterialDetail detail) {
+    final detailProvider = Provider.of<DetailProvider>(context, listen: false);
     return Container(
       child: Row(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Image.asset(
-            'assets/images/warandpeace.jpg',
+          Image.network(
+            detail.coverImgUrl,
             fit: BoxFit.cover,
             height: 200.0,
             width: 130.0,
@@ -97,7 +130,7 @@ class _DetailsState extends State<Details> {
                 Material(
                   type: MaterialType.transparency,
                   child: Text(
-                    'Crime and Punishment',
+                    detail.title,
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
@@ -109,7 +142,7 @@ class _DetailsState extends State<Details> {
                 Material(
                   type: MaterialType.transparency,
                   child: Text(
-                    'Fyodor Dostoevsky',
+                    detail.provider['display_name'],
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w800,
@@ -121,7 +154,7 @@ class _DetailsState extends State<Details> {
                 Material(
                   type: MaterialType.transparency,
                   child: Text(
-                    'Rating 4.5',
+                    '${Constants.rating} ${detail.rating['value']}',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),
@@ -135,14 +168,14 @@ class _DetailsState extends State<Details> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Selling price',
+                        Constants.sellingPrice,
                         style: TextStyle(
                           fontSize: 14.0,
                         ),
                         maxLines: 3,
                       ),
                       Text(
-                        '45 ETB',
+                        '${detail.price['selling']} ${Constants.currency}',
                         style: TextStyle(
                             fontSize: 14.0, fontWeight: FontWeight.bold),
                         maxLines: 3,
@@ -157,14 +190,14 @@ class _DetailsState extends State<Details> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Renting price',
+                        Constants.rentPrice,
                         style: TextStyle(
                           fontSize: 14.0,
                         ),
                         maxLines: 3,
                       ),
                       Text(
-                        '4 ETB/Day',
+                        '${detail.price['rent']['value']} ${Constants.rentPer}',
                         style: TextStyle(
                             fontSize: 14.0, fontWeight: FontWeight.bold),
                         maxLines: 3,
@@ -178,7 +211,39 @@ class _DetailsState extends State<Details> {
                     color: Theme.of(context).accentColor,
                     height: 30.0,
                     width: MediaQuery.of(context).size.width,
-                    child: _buildDownloadReadButton(context),
+                    child: FutureBuilder(
+                      future:
+                          detailProvider.fileExistsInAppDir(detail.file['id']),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        print(snapshot.data);
+                        if (snapshot.data) {
+                          return FlatButton(
+                            onPressed: () async {
+                              final url = await detailProvider
+                                  .getFilePath(detail.file['id']);
+                              await _openMaterial(context, url);
+                            },
+                            child: Text('Open'),
+                          );
+                        }
+
+                        return FlatButton(
+                          onPressed: () async {
+                            final url = Api.baseUrl + detail.file['url'];
+                            await Provider.of<DetailProvider>(context,
+                                    listen: false)
+                                .downloadFile(context, url, detail.file['id'],
+                                    detail.file['size']);
+                          },
+                          child: Text(
+                            Constants.buyRent,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -309,27 +374,14 @@ class _DetailsState extends State<Details> {
     );
   }
 
-  _openMaterial(BuildContext context) async {
+  _openMaterial(BuildContext context, String url) async {
     EpubViewer.setConfig(
       themeColor: Theme.of(context).primaryColor,
       identifier: "androidBook",
-      scrollDirection: EpubScrollDirection.HORIZONTAL,
-      allowSharing: true,
+      scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
+      allowSharing: false,
       enableTts: false,
     );
-    await EpubViewer.openAsset(
-      'assets/epubs/crime.epub',
-    );
-  }
-
-  _buildDownloadReadButton(BuildContext context) {
-    return FlatButton(
-      onPressed: () async {
-        await _openMaterial(context);
-      },
-      child: Text(
-        'Buy/Rent',
-      ),
-    );
+    EpubViewer.open(url);
   }
 }

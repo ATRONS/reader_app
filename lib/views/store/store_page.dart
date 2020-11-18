@@ -1,3 +1,4 @@
+import 'package:atrons_mobile/view_models/loading_state.dart';
 import 'package:atrons_mobile/view_models/material_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
