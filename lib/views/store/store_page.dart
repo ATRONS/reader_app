@@ -1,8 +1,9 @@
+import 'package:atrons_mobile/utils/constants.dart';
+import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/view_models/loading_state.dart';
 import 'package:atrons_mobile/view_models/material_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../fragments/body_builder.dart';
 import '../../fragments/book_tab.dart';
 import '../../fragments/book_list_item.dart';
 import '../../fragments/megazine_list_item.dart';
@@ -26,79 +27,49 @@ class _StorePageState extends State<StorePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final matProvider = Provider.of<MaterialProvider>(context, listen: false);
+    final provider = Provider.of<MaterialProvider>(context, listen: false);
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: _buildSearchSection(),
-      ),
-      body: Selector<MaterialProvider, LoadingState>(
-        selector: (context, model) => model.initialDataLoadingState,
-        builder: (context, state, child) {
-          if (state == LoadingState.loading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (state == LoadingState.failed) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Loading failed'),
-                  FlatButton(
-                    onPressed: () {
-                      matProvider.loadInitialData();
-                    },
-                    child: Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
+    final tabs = <Widget>[Booktab(), _buildNewsPaperTab(), _buildMegazineTab()];
 
-          return _buildBodyList();
-        },
-      ),
-    );
-  }
-
-  Widget _buildBodyList() {
     return RefreshIndicator(
-      // ignore: missing_return
-      onRefresh: () {},
-      child: ListView(
-        children: <Widget>[
-          SizedBox(height: 10.0),
+      onRefresh: () async {
+        provider.setInitialDataState(LoadingState.reloading);
+        provider.loadInitialData();
+      },
+      child: Column(
+        children: [
+          _buildSearchSection(),
+          addVerticalSpace(10.0),
           _buildMaterialSection(),
-          SizedBox(height: 10.0),
-          Divider(color: Colors.black38),
-          SizedBox(height: 10.0),
-          if (selectedIndex == 0) Booktab(),
-          if (selectedIndex == 1) _buildNewsPaperTab(),
-          if (selectedIndex == 2) _buildMegazineTab(),
+          addVerticalSpace(10.0),
+          addDivider(Colors.black38),
+          addVerticalSpace(10.0),
+          Expanded(child: tabs[selectedIndex]),
         ],
       ),
     );
   }
 
   _buildSearchSection() {
-    return Container(
-      height: 40.0,
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      child: Center(
-          child: TextField(
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(6.0),
-            ),
-            borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+    return GestureDetector(
+      onTap: () {
+        print('segue to the search page');
+      },
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14.0),
+          child: Text(
+            Constants.searchHint,
+            style: TextStyle(fontSize: 16.0, color: Colors.grey.shade600),
           ),
-          filled: true,
-          contentPadding: EdgeInsets.only(top: 3, left: 5),
-          hintText: 'search',
         ),
-      )),
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
     );
   }
 

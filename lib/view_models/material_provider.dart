@@ -51,4 +51,9 @@ class MaterialProvider extends ChangeNotifier {
       return notifyListeners();
     });
   }
+
+  void setInitialDataState(LoadingState state) {
+    initialDataLoadingState = state;
+    return notifyListeners();
+  }
 }

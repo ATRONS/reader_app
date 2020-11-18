@@ -1,5 +1,7 @@
 import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/utils/constants.dart';
+import 'package:atrons_mobile/view_models/loading_state.dart';
 import 'package:atrons_mobile/view_models/material_provider.dart';
 import 'package:atrons_mobile/views/genres/listOfGenre.dart';
 import 'package:flutter/material.dart';
@@ -8,23 +10,59 @@ import './book_card.dart';
 import '../theme/app_theme.dart';
 import '../utils/router.dart';
 import '../views/genres/booksInGenre.dart';
+import '../utils/helper_funcs.dart';
 
-class Booktab extends StatelessWidget {
+class Booktab extends StatefulWidget {
+  @override
+  _BooktabState createState() => _BooktabState();
+}
+
+class _BooktabState extends State<Booktab> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<MaterialProvider>(context, listen: false).loadInitialData();
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<MaterialProvider>(context, listen: false);
-    final generes = provider.generes;
-    final popular = provider.popular;
 
-    return Column(
-      children: <Widget>[
-        _buildSectionTitle('Genres', context),
-        SizedBox(height: 10.0),
-        _buildGenreSection(generes),
-        SizedBox(height: 20.0),
-        _buildNewSection(popular),
-        SizedBox(height: 10.0),
-      ],
+    return Selector<MaterialProvider, LoadingState>(
+      selector: (context, model) => model.initialDataLoadingState,
+      builder: (context, state, child) {
+        if (state == LoadingState.loading) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (state == LoadingState.failed) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(Constants.loadingFailed),
+                FlatButton(
+                  onPressed: () {
+                    provider.setInitialDataState(LoadingState.failed);
+                    provider.loadInitialData();
+                  },
+                  child: Text(Constants.retry),
+                ),
+              ],
+            ),
+          );
+        }
+        return ListView(
+          children: <Widget>[
+            _buildSectionTitle(Constants.generes, context),
+            addVerticalSpace(10.0),
+            _buildGenreSection(provider.generes),
+            addVerticalSpace(20.0),
+            _buildNewSection(provider.popular),
+            addVerticalSpace(20.0),
+          ],
+        );
+      },
     );
   }
 
@@ -49,7 +87,7 @@ class Booktab extends StatelessWidget {
               );
             },
             child: Text(
-              'See All',
+              Constants.seeAll,
               style: TextStyle(
                 color: CustomTheme.lightAccent,
                 fontWeight: FontWeight.w400,
@@ -169,7 +207,7 @@ class Booktab extends StatelessWidget {
               //   );
             },
             child: Text(
-              'See All',
+              Constants.seeAll,
               style: TextStyle(
                 color: CustomTheme.lightAccent,
                 fontWeight: FontWeight.w400,
