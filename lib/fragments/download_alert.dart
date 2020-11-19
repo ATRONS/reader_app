@@ -1,16 +1,16 @@
+import 'package:atrons_mobile/utils/api.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
+import 'package:atrons_mobile/models/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_alert.dart';
 
 class DownloadAlert extends StatefulWidget {
-  final String url;
-  final String path;
-  final int total;
+  final MaterialDetail material;
+  final String downloadPath;
 
-  DownloadAlert(
-      {Key key, @required this.url, @required this.path, @required this.total})
+  DownloadAlert({Key key, @required this.material, @required this.downloadPath})
       : super(key: key);
 
   @override
@@ -18,28 +18,31 @@ class DownloadAlert extends StatefulWidget {
 }
 
 class _DownloadAlertState extends State<DownloadAlert> {
-  Dio dio = new Dio();
+  final dio = new Dio();
+
   int received = 0;
   String progress = '0';
-  // int total = 0;
 
-  download() async {
+  void download() async {
+    final fileSize = widget.material.file['size'];
+    final fileurl = Api.baseUrl + widget.material.file['url'];
+
     await dio.download(
-      widget.url,
-      widget.path,
+      fileurl,
+      widget.downloadPath,
       deleteOnError: true,
-      onReceiveProgress: (receivedBytes, totalBytes) {
+      onReceiveProgress: (receivedBytes, totalBytes) async {
         setState(() {
           received = receivedBytes;
-          progress = (received / widget.total * 100).toStringAsFixed(0);
+          progress = (received / fileSize * 100).toStringAsFixed(0);
         });
 
         //Check if download is complete and close the alert dialog
-        if (receivedBytes == widget.total) {
-          Navigator.pop(context, '${Helpers.formatBytes(widget.total, 1)}');
+        if (receivedBytes == fileSize) {
+          Navigator.pop(context, '${Helpers.formatBytes(fileSize, 1)}');
         }
       },
-    );
+    ).catchError((err) => print(err));
   }
 
   @override
@@ -50,6 +53,8 @@ class _DownloadAlertState extends State<DownloadAlert> {
 
   @override
   Widget build(BuildContext context) {
+    final fileSize = widget.material.file['size'];
+
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: CustomAlert(
@@ -99,7 +104,7 @@ class _DownloadAlertState extends State<DownloadAlert> {
                   ),
                   Text(
                     '${Helpers.formatBytes(received, 1)} '
-                    'of ${Helpers.formatBytes(widget.total, 1)}',
+                    'of ${Helpers.formatBytes(fileSize, 1)}',
                     style: TextStyle(
                       fontSize: 13.0,
                     ),

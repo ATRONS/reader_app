@@ -5,11 +5,8 @@ class BookItem extends StatelessWidget {
   final String img;
   final String title;
 
-  BookItem({
-    Key key,
-    @required this.img,
-    @required this.title
-  }) : super(key: key);
+  BookItem({Key key, @required this.img, @required this.title})
+      : super(key: key);
 
   static final uuid = Uuid();
   final String imgTag = uuid.v4();
@@ -29,10 +26,10 @@ class BookItem extends StatelessWidget {
             child: Hero(
               tag: imgTag,
               child: Image.asset(
-                  'assets/images/warandpeace.jpg',
-                  fit: BoxFit.cover,
-                  height: 150.0,
-                ),               
+                'assets/images/warandpeace.jpg',
+                fit: BoxFit.cover,
+                height: 150.0,
+              ),
             ),
           ),
           SizedBox(height: 5.0),

@@ -30,13 +30,14 @@ class BookCard extends StatelessWidget {
             MyRouter.pushPage(context, Details(id: material.id));
           },
           child: ClipRRect(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0),
-              ),
-              child: Image.network(
-                this.material.coverImgUrl,
-                fit: BoxFit.cover,
-              )),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10.0),
+            ),
+            child: Image.network(
+              this.material.coverImgUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ),
     );
