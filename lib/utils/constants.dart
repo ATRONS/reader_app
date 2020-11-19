@@ -12,4 +12,5 @@ class Constants {
   static String generes = 'Genres';
   static String loadingFailed = 'Loading failed';
   static String searchHint = 'Search';
+  static String open = 'Open';
 }
