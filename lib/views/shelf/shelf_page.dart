@@ -1,21 +1,25 @@
+import 'package:atrons_mobile/view_models/material_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../fragments/body_builder.dart';
 import '../../fragments/book.dart';
-// import '../../fragments/loading.dart';
-// import '../../utils/router.dart';
-// import 'package:provider/provider.dart';
 
 class ShelfPage extends StatefulWidget {
   @override
   _ShelfPageState createState() => _ShelfPageState();
-  Function navigateToStore;
+  final Function navigateToStore;
 
-  ShelfPage(Function navigationTapped) {
-    navigateToStore = navigationTapped;
-  }
+  ShelfPage({Key key, @required this.navigateToStore});
 }
 
 class _ShelfPageState extends State<ShelfPage> {
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<MaterialProvider>(context, listen: false);
+    provider.getDownloadedMaterials();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

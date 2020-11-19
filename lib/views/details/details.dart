@@ -212,8 +212,7 @@ class _DetailsState extends State<Details> {
                     height: 30.0,
                     width: MediaQuery.of(context).size.width,
                     child: FutureBuilder(
-                      future:
-                          detailProvider.fileExistsInAppDir(detail.file['id']),
+                      future: detailProvider.fileExistsInAppDir(detail.id),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
@@ -222,25 +221,21 @@ class _DetailsState extends State<Details> {
                         if (snapshot.data) {
                           return FlatButton(
                             onPressed: () async {
-                              final url = await detailProvider
-                                  .getFilePath(detail.file['id']);
+                              final url =
+                                  await detailProvider.getFilePath(detail.id);
                               await _openMaterial(context, url);
                             },
-                            child: Text('Open'),
+                            child: Text(Constants.open),
                           );
                         }
 
                         return FlatButton(
                           onPressed: () async {
-                            final url = Api.baseUrl + detail.file['url'];
                             await Provider.of<DetailProvider>(context,
                                     listen: false)
-                                .downloadFile(context, url, detail.file['id'],
-                                    detail.file['size']);
+                                .downloadFile(context);
                           },
-                          child: Text(
-                            Constants.buyRent,
-                          ),
+                          child: Text(Constants.buyRent),
                         );
                       },
                     ),

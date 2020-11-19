@@ -75,15 +75,17 @@ class _StorePageState extends State<StorePage>
 
   _buildMaterialSection() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: SizedBox(
-          height: 25,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: materials.length,
-              itemBuilder: (BuildContext context, int index) =>
-                  _buildMaterialBody(index)),
-        ));
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: SizedBox(
+        height: 25,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: materials.length,
+          itemBuilder: (BuildContext context, int index) =>
+              _buildMaterialBody(index),
+        ),
+      ),
+    );
   }
 
   _buildMaterialBody(int index) {
@@ -94,24 +96,24 @@ class _StorePageState extends State<StorePage>
         });
       },
       child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                materials[index],
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 5 / 4),
-                height: 2,
-                width: 30,
-                color:
-                    selectedIndex == index ? Colors.black : Colors.transparent,
-              )
-            ],
-          )),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              materials[index],
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 5 / 4),
+              height: 2,
+              width: 30,
+              color: selectedIndex == index ? Colors.black : Colors.transparent,
+            )
+          ],
+        ),
+      ),
     );
   }
 
