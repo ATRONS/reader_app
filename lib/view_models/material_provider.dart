@@ -1,3 +1,4 @@
+import 'package:atrons_mobile/database/downloads.dart';
 import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/utils/api.dart';
@@ -8,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'loading_state.dart';
 
 class MaterialProvider extends ChangeNotifier {
-  Api api = Api();
+  Api _api = Api();
+  final _downloadsDb = DownloadsDB();
 
   List<Genere> _generes;
   List<Genere> get generes => _generes;
@@ -21,7 +23,7 @@ class MaterialProvider extends ChangeNotifier {
   LoadingState newspapaerLoadingState = LoadingState.loading;
 
   void loadInitialData() {
-    api.getInitialData().then((Response response) {
+    _api.getInitialData().then((Response response) {
       final Map<String, dynamic> body = response.data;
 
       if (!body['success']) {
@@ -50,6 +52,11 @@ class MaterialProvider extends ChangeNotifier {
       print(err);
       return notifyListeners();
     });
+  }
+
+  getDownloadedMaterials() async {
+    final materials = await _downloadsDb.getAllMaterials();
+    print(materials);
   }
 
   void setInitialDataState(LoadingState state) {
