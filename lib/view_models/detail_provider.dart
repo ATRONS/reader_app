@@ -1,9 +1,8 @@
 import 'dart:io';
-
+import 'package:atrons_mobile/database/downloads.dart';
 import 'package:atrons_mobile/fragments/download_alert.dart';
 import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/utils/api.dart';
-import 'package:atrons_mobile/utils/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,21 +12,22 @@ import 'package:permission_handler/permission_handler.dart';
 import 'loading_state.dart';
 
 class DetailProvider extends ChangeNotifier {
-  final api = Api();
+  final _api = Api();
+  final _downloadsDb = DownloadsDB();
+
   MaterialDetail _selectedMaterial;
   MaterialDetail get selectedMaterial => _selectedMaterial;
   LoadingState loadingState = LoadingState.loading;
 
-  Future downloadFile(
-      BuildContext context, String url, String filename, int total) async {
+  Future downloadFile(BuildContext context) async {
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
 
     if (permission != PermissionStatus.granted) {
       await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-      startDownload(context, url, filename, total);
+      startDownload(context);
     } else {
-      startDownload(context, url, filename, total);
+      startDownload(context);
     }
   }
 
@@ -40,50 +40,38 @@ class DetailProvider extends ChangeNotifier {
 
   Future<String> getFilePath(String filename) async {
     final appDocDir = await getAppDocDir();
-    String path = Platform.isIOS
-        ? appDocDir + filename
-        : appDocDir.split('Android')[0] + '${Constants.appName}/$filename.epub';
-    return path;
+    return appDocDir + '/$filename.epub';
   }
 
   Future<bool> fileExistsInAppDir(String filename) async {
     final path = await getFilePath(filename);
+    print(path);
     final file = File(path);
     return await file.exists();
   }
 
-  void startDownload(
-      BuildContext context, String url, String filename, int total) async {
-    final path = await getFilePath(filename);
-    if (Platform.isAndroid) {
-      Directory(path.split('Android')[0] + '${Constants.appName}').createSync();
-    }
+  void startDownload(BuildContext context) async {
+    final path = await getFilePath(selectedMaterial.id);
 
     File file = File(path);
-    if (!await file.exists()) {
-      await file.create();
-    } else {
-      await file.delete();
-      await file.create();
-    }
+    if (await file.exists()) await file.delete();
 
     showDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) => DownloadAlert(
-        url: url,
-        path: path,
-        total: total,
+        material: selectedMaterial,
+        downloadPath: path,
       ),
     ).then((v) {
       if (v != null) {
-        print('download finished');
+        _downloadsDb.addMaterial(selectedMaterial.toMiniJSON());
       }
     });
   }
 
   void getMaterialDetail(String id) {
-    api.getMaterialDetail(id).then((Response res) async {
+    _api.getMaterialDetail(id).then((Response res) async {
       final Map<String, dynamic> body = res.data;
 
       if (!body['success']) {
@@ -98,7 +86,6 @@ class DetailProvider extends ChangeNotifier {
       return notifyListeners();
     }).catchError((err) {
       print(err);
-      print('error in here');
       loadingState = LoadingState.failed;
       return notifyListeners();
     });
