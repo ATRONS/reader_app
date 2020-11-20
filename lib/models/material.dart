@@ -2,10 +2,11 @@ import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/utils/api.dart';
 
 class MiniMaterial {
-  String id, type, title, subtitle, coverImgUrl;
+  String id, iD, type, title, subtitle, coverImgUrl;
 
   MiniMaterial.fromJSON(Map<String, dynamic> json)
       : id = json['_id'],
+        iD = json['iD'],
         type = json['type'],
         title = json['title'],
         subtitle = json['subtitle'],
@@ -52,6 +53,7 @@ class MaterialDetail {
   Map<String, dynamic> toMiniJSON() {
     return {
       '_id': this.id,
+      'iD': this.id,
       'type': this.type,
       'title': this.title,
       'subtitle': this.subtitle,
