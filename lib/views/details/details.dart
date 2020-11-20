@@ -1,9 +1,10 @@
 import 'package:atrons_mobile/models/material.dart';
-import 'package:atrons_mobile/utils/api.dart';
 import 'package:atrons_mobile/utils/constants.dart';
-import 'package:atrons_mobile/view_models/detail_provider.dart';
-import 'package:atrons_mobile/view_models/loading_state.dart';
-import 'package:epub_viewer/epub_viewer.dart';
+import 'package:atrons_mobile/utils/file_helper.dart';
+import 'package:atrons_mobile/utils/styles.dart';
+import 'package:atrons_mobile/providers/detail_provider.dart';
+import 'package:atrons_mobile/providers/loading_state.dart';
+import 'package:atrons_mobile/providers/material_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../fragments/book_list_item.dart';
@@ -23,50 +24,64 @@ class _DetailsState extends State<Details> {
 
   @override
   void initState() {
+    super.initState();
     Provider.of<DetailProvider>(context, listen: false)
         .getMaterialDetail(widget.id);
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.favorite,
-                color: Theme.of(context).iconTheme.color,
-              ),
-            )
-          ],
-        ),
-        body: Selector<DetailProvider, LoadingState>(
-            selector: (context, model) => model.loadingState,
-            builder: (context, state, child) {
-              if (state == LoadingState.loading) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (state == LoadingState.failed) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(Constants.errMsg1),
-                      FlatButton(
-                        onPressed: () {},
-                        child: Text(Constants.retry),
-                      )
-                    ],
-                  ),
-                );
-              }
+    return WillPopScope(
+      onWillPop: () async {
+        final provider = Provider.of<DetailProvider>(context, listen: false);
+        provider.setLoadingState(LoadingState.failed);
+        provider.setIsDownloaded(false);
+        return true;
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.favorite,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+              )
+            ],
+          ),
+          body: Selector<DetailProvider, LoadingState>(
+              selector: (context, model) => model.loadingState,
+              builder: (context, state, child) {
+                if (state == LoadingState.loading) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (state == LoadingState.failed) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(Constants.errMsg1),
+                        FlatButton(
+                          onPressed: () {},
+                          child: Text(Constants.retry),
+                        )
+                      ],
+                    ),
+                  );
+                }
 
-              final detail = Provider.of<DetailProvider>(context, listen: false)
-                  .selectedMaterial;
-              return _buildDetailView(detail);
-            }));
+                final detail =
+                    Provider.of<DetailProvider>(context, listen: false)
+                        .selectedMaterial;
+                return _buildDetailView(detail);
+              })),
+    );
   }
 
   Widget _buildDetailView(MaterialDetail detail) {
@@ -108,6 +123,7 @@ class _DetailsState extends State<Details> {
 
   _buildImageTitleSection(MaterialDetail detail) {
     final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+
     return Container(
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -209,34 +225,50 @@ class _DetailsState extends State<Details> {
                 Center(
                   child: Container(
                     color: Theme.of(context).accentColor,
-                    height: 30.0,
                     width: MediaQuery.of(context).size.width,
-                    child: FutureBuilder(
-                      future: detailProvider.fileExistsInAppDir(detail.id),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                        print(snapshot.data);
-                        if (snapshot.data) {
-                          return FlatButton(
-                            onPressed: () async {
-                              final url =
-                                  await detailProvider.getFilePath(detail.id);
-                              await _openMaterial(context, url);
-                            },
-                            child: Text(Constants.open),
-                          );
-                        }
+                    child: Selector<DetailProvider, bool>(
+                      selector: (ctx, model) => model.isDownloaded,
+                      builder: (context, isDownloaded, child) {
+                        final materialProvider = Provider.of<MaterialProvider>(
+                            context,
+                            listen: false);
 
-                        return FlatButton(
-                          onPressed: () async {
-                            await Provider.of<DetailProvider>(context,
-                                    listen: false)
-                                .downloadFile(context);
-                          },
-                          child: Text(Constants.buyRent),
+                        final openMaterialBtn = FlatButton(
+                          padding: const EdgeInsets.all(15),
+                          onPressed: () => materialProvider.openMaterial(
+                              context, detailProvider.selectedMaterial.id),
+                          child: Text(
+                            Constants.open,
+                            style: Style.whiteText,
+                          ),
                         );
+
+                        final downloadBtn = FlatButton(
+                          onPressed: () => detailProvider.downloadFile(context),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text(
+                              Constants.buyRent,
+                              style: Style.whiteText,
+                            ),
+                          ),
+                        );
+
+                        if (!isDownloaded) {
+                          return FutureBuilder(
+                              future: fileExistsInAppDir(
+                                  detailProvider.selectedMaterial.id),
+                              builder: (ctx, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+
+                                if (snapshot.data) return openMaterialBtn;
+                                return downloadBtn;
+                              });
+                        }
+                        return openMaterialBtn;
                       },
                     ),
                   ),
@@ -367,16 +399,5 @@ class _DetailsState extends State<Details> {
         );
       },
     );
-  }
-
-  _openMaterial(BuildContext context, String url) async {
-    EpubViewer.setConfig(
-      themeColor: Theme.of(context).primaryColor,
-      identifier: "androidBook",
-      scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
-      allowSharing: false,
-      enableTts: false,
-    );
-    EpubViewer.open(url);
   }
 }

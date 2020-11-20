@@ -1,5 +1,5 @@
 import 'package:atrons_mobile/models/genere.dart';
-import 'package:atrons_mobile/view_models/material_provider.dart';
+import 'package:atrons_mobile/providers/material_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,5 +1,5 @@
 import 'package:atrons_mobile/models/material.dart';
-import 'package:atrons_mobile/view_models/material_provider.dart';
+import 'package:atrons_mobile/providers/material_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../fragments/body_builder.dart';
@@ -22,30 +22,23 @@ class _ShelfPageState extends State<ShelfPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<MaterialProvider>(context, listen: false);
-    // print(provider.shelfMaterialsList.length);
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            'Atrons',
-          ),
-        ),
-        body: FutureBuilder(
-            future: provider.getDownloadedMaterials(),
-            builder: (ctx, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
-              }
+    return FutureBuilder(
+      future: provider.getDownloadedMaterials(),
+      builder: (ctx, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-              return BodyBuilder(
-                child: ListView(
-                  children: <Widget>[
-                    _buildCurrentMaterial(),
-                    _buildBodyList(snapshot.data)
-                  ],
-                ),
-              );
-            }));
+        return BodyBuilder(
+          child: ListView(
+            children: <Widget>[
+              // _buildCurrentMaterial(),
+              _buildBodyList(snapshot.data)
+            ],
+          ),
+        );
+      },
+    );
   }
 
   _buildCurrentMaterial() {

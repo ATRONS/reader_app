@@ -1,7 +1,7 @@
 import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
-import 'package:atrons_mobile/view_models/loading_state.dart';
-import 'package:atrons_mobile/view_models/material_provider.dart';
+import 'package:atrons_mobile/providers/loading_state.dart';
+import 'package:atrons_mobile/providers/material_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../fragments/book_tab.dart';

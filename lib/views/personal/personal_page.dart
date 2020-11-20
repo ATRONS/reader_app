@@ -2,7 +2,7 @@ import 'package:atrons_mobile/views/purchase/purchase.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/router.dart';
-import '../../view_models/app_provider.dart';
+import '../../providers/app_provider.dart';
 import '../downloads/downloads.dart';
 import '../favorites/favorites.dart';
 import 'package:flutter_icons/flutter_icons.dart';
