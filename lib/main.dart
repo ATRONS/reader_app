@@ -24,11 +24,21 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: Constants.appName,
-      theme: CustomTheme.lightTheme,
-      home: LoginPage(),
+    // final providerapp = Provider.of<AppProvider>(context, listen: false);
+    // print(providerapp.thethemenow);
+
+    return Selector<AppProvider, String>(
+      builder: (context, data, child) {
+        // print('$data dollar');
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: Constants.appName,
+          theme:
+              data == 'dark' ? CustomTheme.darkTheme : CustomTheme.lightTheme,
+          home: LoginPage(),
+        );
+      },
+      selector: (buildContext, providerapp) => providerapp.thethemenow,
     );
   }
 }
