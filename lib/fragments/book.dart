@@ -1,12 +1,17 @@
+import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/view_models/detail_provider.dart';
+import 'package:epub_viewer/epub_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class BookItem extends StatelessWidget {
-  final String img;
-  final String title;
+  final MiniMaterial materialobj;
 
-  BookItem({Key key, @required this.img, @required this.title})
-      : super(key: key);
+  BookItem({
+    Key key,
+    @required this.materialobj,
+  }) : super(key: key);
 
   static final uuid = Uuid();
   final String imgTag = uuid.v4();
@@ -15,8 +20,15 @@ class BookItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        print("matid - " + materialobj.id);
+        final url = await detailProvider.getFilePath(materialobj.id);
+        print(url);
+        await _openMaterial(context, url);
+      },
       child: Column(
         children: <Widget>[
           ClipRRect(
@@ -26,6 +38,7 @@ class BookItem extends StatelessWidget {
             child: Hero(
               tag: imgTag,
               child: Image.asset(
+                // materialobj.coverImgUrl,
                 'assets/images/warandpeace.jpg',
                 fit: BoxFit.cover,
                 height: 150.0,
@@ -38,7 +51,7 @@ class BookItem extends StatelessWidget {
             child: Material(
               type: MaterialType.transparency,
               child: Text(
-                '${title.replaceAll(r'\', '')}',
+                '${materialobj.title.replaceAll(r'\', '')}',
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
@@ -52,5 +65,16 @@ class BookItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _openMaterial(BuildContext context, String url) async {
+    EpubViewer.setConfig(
+      themeColor: Theme.of(context).primaryColor,
+      identifier: "androidBook",
+      scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
+      allowSharing: false,
+      enableTts: false,
+    );
+    EpubViewer.open(url);
   }
 }
