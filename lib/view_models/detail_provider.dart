@@ -40,6 +40,7 @@ class DetailProvider extends ChangeNotifier {
 
   Future<String> getFilePath(String filename) async {
     final appDocDir = await getAppDocDir();
+    print("getfilepath - " + appDocDir + '/$filename.epub');
     return appDocDir + '/$filename.epub';
   }
 

@@ -17,6 +17,8 @@ class MaterialProvider extends ChangeNotifier {
   Map<String, List<MiniMaterial>> _popular;
   Map<String, List<MiniMaterial>> get popular => _popular;
 
+  List<MiniMaterial> shelfMaterialsList;
+
   LoadingState initialDataLoadingState = LoadingState.loading;
   LoadingState bookLoadingState = LoadingState.loading;
   LoadingState magazineLoadingState = LoadingState.loading;
@@ -54,9 +56,8 @@ class MaterialProvider extends ChangeNotifier {
     });
   }
 
-  getDownloadedMaterials() async {
-    final materials = await _downloadsDb.getAllMaterials();
-    print(materials);
+  Future<List<MiniMaterial>> getDownloadedMaterials() async {
+    return await _downloadsDb.getAllMaterials();
   }
 
   void setInitialDataState(LoadingState state) {
