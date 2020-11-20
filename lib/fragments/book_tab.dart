@@ -1,8 +1,9 @@
 import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/utils/constants.dart';
-import 'package:atrons_mobile/view_models/loading_state.dart';
-import 'package:atrons_mobile/view_models/material_provider.dart';
+import 'package:atrons_mobile/providers/loading_state.dart';
+import 'package:atrons_mobile/providers/material_provider.dart';
+import 'package:atrons_mobile/utils/styles.dart';
 import 'package:atrons_mobile/views/genres/listOfGenre.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,7 @@ class _BooktabState extends State<Booktab> {
             addVerticalSpace(10.0),
             _buildGenreSection(provider.generes),
             addVerticalSpace(20.0),
-            _buildNewSection(provider.popular),
+            _buildNewSection(provider),
             addVerticalSpace(20.0),
           ],
         );
@@ -74,10 +75,7 @@ class _BooktabState extends State<Booktab> {
         children: <Widget>[
           Text(
             '$title',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.w500,
-            ),
+            style: Style.blackTextH1,
           ),
           InkWell(
             onTap: () {
@@ -124,10 +122,10 @@ class _BooktabState extends State<Booktab> {
                     Radius.circular(20.0),
                   ),
                   onTap: () {
-                    MyRouter.pushPage(
-                      context,
-                      BooksInGenre(title: generes[index].name),
-                    );
+                    // MyRouter.pushPage(
+                    //   context,
+                    //   BooksInGenre(title: generes[index].name),
+                    // );
                   },
                   child: Center(
                     child: Padding(
@@ -149,11 +147,11 @@ class _BooktabState extends State<Booktab> {
     );
   }
 
-  _buildNewSection(Map<String, List<MiniMaterial>> popular) {
+  _buildNewSection(MaterialProvider provider) {
     final generes = [];
     final List<List<MiniMaterial>> materials = [];
 
-    popular.forEach((key, value) {
+    provider.popular.forEach((key, value) {
       generes.add(key);
       materials.add(value);
     });
@@ -163,13 +161,14 @@ class _BooktabState extends State<Booktab> {
       padding: EdgeInsets.symmetric(horizontal: 0.0),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: popular.length,
+      itemCount: provider.popular.length,
       itemBuilder: (BuildContext context, int index) {
         return Padding(
           padding: EdgeInsets.symmetric(vertical: 10.0),
           child: Column(
             children: <Widget>[
-              _buildSectionHeader(generes[index]),
+              _buildSectionHeader(
+                  provider.getGenereName(generes[index], GenereLang.english)),
               SizedBox(height: 10.0),
               _buildSectionBookList(materials[index]),
             ],
@@ -188,10 +187,7 @@ class _BooktabState extends State<Booktab> {
           Flexible(
             child: Text(
               'Popular of $genereName',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w500,
-              ),
+              style: Style.blackTextH2,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

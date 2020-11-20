@@ -1,4 +1,5 @@
 import 'package:atrons_mobile/utils/api.dart';
+import 'package:atrons_mobile/utils/file_helper.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/models/material.dart';
 import 'package:dio/dio.dart';
@@ -8,10 +9,8 @@ import 'custom_alert.dart';
 
 class DownloadAlert extends StatefulWidget {
   final MaterialDetail material;
-  final String downloadPath;
 
-  DownloadAlert({Key key, @required this.material, @required this.downloadPath})
-      : super(key: key);
+  DownloadAlert({Key key, @required this.material}) : super(key: key);
 
   @override
   _DownloadAlertState createState() => _DownloadAlertState();
@@ -26,23 +25,35 @@ class _DownloadAlertState extends State<DownloadAlert> {
   void download() async {
     final fileSize = widget.material.file['size'];
     final fileurl = Api.baseUrl + widget.material.file['url'];
+    final imgUrl = widget.material.coverImgUrl;
+    final downloadPath = await getEpubFilePath(widget.material.id);
+    final imgDownloadPath = await getImgFilePath(widget.material.id);
 
     await dio.download(
       fileurl,
-      widget.downloadPath,
+      downloadPath,
       deleteOnError: true,
       onReceiveProgress: (receivedBytes, totalBytes) async {
         setState(() {
           received = receivedBytes;
           progress = (received / fileSize * 100).toStringAsFixed(0);
         });
-
-        //Check if download is complete and close the alert dialog
-        if (receivedBytes == fileSize) {
-          Navigator.pop(context, '${Helpers.formatBytes(fileSize, 1)}');
-        }
       },
-    ).catchError((err) => print(err));
+    ).then((val) async {
+      // if (receivedBytes == fileSize) {
+      await dio
+          .download(imgUrl, imgDownloadPath, deleteOnError: true)
+          .then((value) {
+        Navigator.pop(context, '${Helpers.formatBytes(fileSize, 1)}');
+      }).catchError((err) {
+        print(err);
+        Navigator.pop(context);
+      });
+      // }
+    }).catchError((err) {
+      print(err);
+      Navigator.pop(context);
+    });
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:atrons_mobile/models/material.dart';
-import 'package:atrons_mobile/view_models/detail_provider.dart';
+import 'package:atrons_mobile/providers/detail_provider.dart';
+import 'package:atrons_mobile/providers/material_provider.dart';
 import 'package:epub_viewer/epub_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,15 +21,10 @@ class BookItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+    final matProvider = Provider.of<MaterialProvider>(context, listen: false);
 
     return InkWell(
-      onTap: () async {
-        print("matid - " + materialobj.id);
-        final url = await detailProvider.getFilePath(materialobj.id);
-        print(url);
-        await _openMaterial(context, url);
-      },
+      onTap: () => matProvider.openMaterial(context, materialobj.iD),
       child: Column(
         children: <Widget>[
           ClipRRect(
