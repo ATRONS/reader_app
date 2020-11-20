@@ -26,14 +26,14 @@ class _PersonalPageState extends State<PersonalPage> {
         'function': () => _pushPage(Favorites()),
       },
       {
-        'icon': Feather.heart,
-        'title': 'Test',
-        'function': () => _pushPage(Purchase()),
-      },
-      {
         'icon': Feather.download,
         'title': 'Downloads',
         'function': () => _pushPage(Downloads()),
+      },
+      {
+        'icon': Feather.moon,
+        'title': 'Dark Mode',
+        'function': () {},
       },
       // {
       //   'icon': Feather.moon,
@@ -134,7 +134,7 @@ class _PersonalPageState extends State<PersonalPage> {
             'About',
           ),
           content: Text(
-            'EBook app by Atrons',
+            'eBook app by Atrons',
           ),
           actions: <Widget>[
             FlatButton(
