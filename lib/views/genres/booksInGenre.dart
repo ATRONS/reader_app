@@ -25,8 +25,7 @@ class BooksInGenre extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.0),
             child: BookItem(
-              img: "kebede",
-              title: "war and peace",
+              materialobj: null,
             ),
           );
         },

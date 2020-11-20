@@ -1,3 +1,4 @@
+import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/view_models/material_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,38 +17,44 @@ class _ShelfPageState extends State<ShelfPage> {
   @override
   void initState() {
     super.initState();
-    final provider = Provider.of<MaterialProvider>(context, listen: false);
-    provider.getDownloadedMaterials();
   }
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MaterialProvider>(context, listen: false);
+    // print(provider.shelfMaterialsList.length);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Atrons',
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            'Atrons',
+          ),
         ),
-      ),
-      body: BodyBuilder(
-        child: ListView(
-          children: <Widget>[_buildCurrentMaterial(), _buildBodyList()],
-        ),
-      ),
-    );
+        body: FutureBuilder(
+            future: provider.getDownloadedMaterials(),
+            builder: (ctx, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              return BodyBuilder(
+                child: ListView(
+                  children: <Widget>[
+                    _buildCurrentMaterial(),
+                    _buildBodyList(snapshot.data)
+                  ],
+                ),
+              );
+            }));
   }
 
   _buildCurrentMaterial() {
     return Row(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 20.0),
-          // current book in use
-          child: BookItem(
-            img: "kebede",
-            title: "",
-          ),
-        ),
+            padding: EdgeInsets.only(left: 20.0),
+            // current book in use
+            child: Container()),
         Container(
             height: 100,
             width: 230,
@@ -57,7 +64,7 @@ class _ShelfPageState extends State<ShelfPage> {
               children: <Widget>[
                 Padding(
                   child: Text(
-                    "War and Peace by Leo Tolstoy",
+                    "war is not and peace",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   padding:
@@ -79,18 +86,18 @@ class _ShelfPageState extends State<ShelfPage> {
     );
   }
 
-  _buildBodyList() {
+  _buildBodyList(List<MiniMaterial> shelfitems) {
     return GridView.builder(
       physics: new NeverScrollableScrollPhysics(),
       padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
       shrinkWrap: true,
-      itemCount: 6,
+      itemCount: shelfitems.length + 1,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 200 / 340,
       ),
       itemBuilder: (BuildContext context, int index) {
-        if (index == 5) {
+        if (index == shelfitems.length) {
           return InkWell(
             onTap: () {
               widget.navigateToStore(1);
@@ -108,8 +115,7 @@ class _ShelfPageState extends State<ShelfPage> {
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.0),
             child: BookItem(
-              img: "kebede",
-              title: "war and peace",
+              materialobj: shelfitems[index],
             ),
           );
         }
