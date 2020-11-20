@@ -1,6 +1,6 @@
-import 'package:atrons_mobile/view_models/app_provider.dart';
-import 'package:atrons_mobile/view_models/detail_provider.dart';
-import 'package:atrons_mobile/view_models/material_provider.dart';
+import 'package:atrons_mobile/providers/app_provider.dart';
+import 'package:atrons_mobile/providers/detail_provider.dart';
+import 'package:atrons_mobile/providers/material_provider.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
