@@ -11,6 +11,7 @@ class AppProvider extends ChangeNotifier {
   ThemeData theme = CustomTheme.lightTheme;
   Key key = UniqueKey();
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  String thethemenow;
 
   void setKey(value) {
     key = value;
@@ -27,6 +28,7 @@ class AppProvider extends ChangeNotifier {
     theme = value;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('theme', c);
+    thethemenow = c;
     notifyListeners();
   }
 
