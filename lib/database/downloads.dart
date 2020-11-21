@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/providers/shelf_provider.dart';
 import 'package:objectdb/objectdb.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -11,20 +12,22 @@ class DownloadsDB {
     return path;
   }
 
-  void addMaterial(Map item) async {
+  void addMaterial(ShelfProvider provider, Map item) async {
     final db = ObjectDB(await getPath());
     db.open();
     db.insert(item);
     db.tidy();
     await db.close();
+    provider.addToShelf(MiniMaterial.fromJSON(item));
   }
 
-  Future<int> removeMaterial(String id) async {
+  Future<int> removeMaterial(ShelfProvider provider, String id) async {
     final db = ObjectDB(await getPath());
     db.open();
-    int val = await db.remove({'_id': id});
+    int val = await db.remove({'iD': id});
     db.tidy();
     await db.close();
+    provider.removeFromShelf(id);
     return val;
   }
 
