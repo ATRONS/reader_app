@@ -1,7 +1,7 @@
+import 'dart:io';
+
 import 'package:atrons_mobile/models/material.dart';
-import 'package:atrons_mobile/providers/detail_provider.dart';
 import 'package:atrons_mobile/providers/material_provider.dart';
-import 'package:epub_viewer/epub_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -33,9 +33,8 @@ class BookItem extends StatelessWidget {
             ),
             child: Hero(
               tag: imgTag,
-              child: Image.asset(
-                // materialobj.coverImgUrl,
-                'assets/images/warandpeace.jpg',
+              child: Image.file(
+                File(materialobj.coverImgFileUrl),
                 fit: BoxFit.cover,
                 height: 150.0,
               ),
@@ -61,16 +60,5 @@ class BookItem extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  _openMaterial(BuildContext context, String url) async {
-    EpubViewer.setConfig(
-      themeColor: Theme.of(context).primaryColor,
-      identifier: "androidBook",
-      scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
-      allowSharing: false,
-      enableTts: false,
-    );
-    EpubViewer.open(url);
   }
 }
