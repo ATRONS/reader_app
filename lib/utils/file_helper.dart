@@ -9,13 +9,9 @@ Future<String> getAppDocDir() async {
   return appDocDir.path;
 }
 
-Future<String> getAppTempDir() async {
-  return await getAppTempDir();
-}
-
 Future<String> getEpubTempFilePath(String filename) async {
-  final tempDir = await getAppTempDir();
-  return '$tempDir/$filename.epub';
+  final tempDir = await getTemporaryDirectory();
+  return '${tempDir.path}/$filename.epub';
 }
 
 Future<String> getEpubFilePath(String filename) async {
