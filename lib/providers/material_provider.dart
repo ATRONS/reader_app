@@ -4,12 +4,15 @@ import 'package:atrons_mobile/database/downloads.dart';
 import 'package:atrons_mobile/database/locator.dart';
 import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/providers/user_provider.dart';
 import 'package:atrons_mobile/utils/api.dart';
+import 'package:atrons_mobile/utils/crypt.dart';
 import 'package:atrons_mobile/utils/file_helper.dart';
 import 'package:dio/dio.dart';
 import 'package:epub_viewer/epub_viewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'loading_state.dart';
 
@@ -79,7 +82,15 @@ class MaterialProvider extends ChangeNotifier {
   }
 
   void openMaterial(BuildContext context, String id) async {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
     final url = await getEpubFilePath(id);
+    final tempUrl = await getEpubTempFilePath(id);
+
+    final decrypted = await decryptFile(url, tempUrl, user.key, user.iv);
+    if (!decrypted) {
+      print('DECRYPTION FAILED FOR SOME REASON');
+      return;
+    }
 
     List locators = await LocatorDB().getLocator(id);
 
@@ -90,7 +101,7 @@ class MaterialProvider extends ChangeNotifier {
       allowSharing: false,
       enableTts: false,
     );
-    EpubViewer.open(url,
+    EpubViewer.open(tempUrl,
         lastLocation:
             locators.isNotEmpty ? EpubLocator.fromJson(locators[0]) : null);
 
