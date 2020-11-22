@@ -1,3 +1,4 @@
+import 'package:atrons_mobile/theme/app_theme.dart';
 import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/providers/loading_state.dart';
@@ -42,7 +43,7 @@ class _StorePageState extends State<StorePage>
           addVerticalSpace(10.0),
           _buildMaterialSection(),
           addVerticalSpace(10.0),
-          addDivider(Colors.black38),
+          addDivider(Theme.of(context).dividerColor),
           addVerticalSpace(10.0),
           Expanded(child: tabs[selectedIndex]),
         ],
@@ -102,14 +103,17 @@ class _StorePageState extends State<StorePage>
           children: <Widget>[
             Text(
               materials[index],
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).dividerColor),
             ),
             Container(
               margin: EdgeInsets.only(top: 5 / 4),
               height: 2,
               width: 30,
-              color: selectedIndex == index ? Colors.black : Colors.transparent,
+              color: selectedIndex == index
+                  ? Theme.of(context).dividerColor
+                  : Colors.transparent,
             )
           ],
         ),
