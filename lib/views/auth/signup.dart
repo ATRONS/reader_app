@@ -6,6 +6,8 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  var email, password, firstname, lastname;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +66,9 @@ class _SignupPageState extends State<SignupPage> {
                   border: InputBorder.none,
                   hintText: "First Name",
                   hintStyle: TextStyle(color: Colors.grey)),
+              onChanged: (value) {
+                firstname = value;
+              },
             ),
           ),
           Container(
@@ -76,6 +81,9 @@ class _SignupPageState extends State<SignupPage> {
                   border: InputBorder.none,
                   hintText: "Last Name",
                   hintStyle: TextStyle(color: Colors.grey)),
+              onChanged: (value) {
+                lastname = value;
+              },
             ),
           ),
           Container(
@@ -88,6 +96,9 @@ class _SignupPageState extends State<SignupPage> {
                   border: InputBorder.none,
                   hintText: "Email",
                   hintStyle: TextStyle(color: Colors.grey)),
+              onChanged: (value) {
+                email = value;
+              },
             ),
           ),
           Container(
@@ -100,6 +111,10 @@ class _SignupPageState extends State<SignupPage> {
                   border: InputBorder.none,
                   hintText: "Password",
                   hintStyle: TextStyle(color: Colors.grey)),
+              obscureText: true,
+              onChanged: (value) {
+                password = value;
+              },
             ),
           ),
         ],
@@ -108,17 +123,20 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _buildButtons() {
-    return Container(
-        height: 50,
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Theme.of(context).accentColor),
-        child: Center(
-          child: Text(
-            "Sign up",
-            style: TextStyle(color: Colors.white),
-          ),
-        ));
+    return InkWell(
+      onTap: () {},
+      child: Container(
+          height: 50,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Theme.of(context).accentColor),
+          child: Center(
+            child: Text(
+              "Sign up",
+              style: TextStyle(color: Colors.white),
+            ),
+          )),
+    );
   }
 }
