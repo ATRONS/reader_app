@@ -11,7 +11,6 @@ dependencies:
 
   cupertino_icons: ^1.0.0
   dio: ^3.0.10
-  encrypt: ^4.1.0
   epub_viewer: ^0.1.8
   flutter_icons: ^1.1.0
   objectdb: ^1.0.10+1
@@ -21,6 +20,7 @@ dependencies:
   flutter_spinkit: ^4.1.2+1
   permission_handler: ^4.2.0+hotfix.1
   path_provider: ^1.6.24
+  pointycastle: ^2.0.0
 
 dev_dependencies:
   flutter_test:
