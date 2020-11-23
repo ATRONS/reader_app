@@ -1,6 +1,22 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:pointycastle/export.dart';
 
-import 'package:encrypt/encrypt.dart';
+Uint8List aesCbcDecrypt(Uint8List key, Uint8List iv, Uint8List cipherText) {
+  final cbc = CBCBlockCipher(AESFastEngine())
+    ..init(false, ParametersWithIV(KeyParameter(key), iv)); // false=decrypt
+
+  final paddedPlainText = Uint8List(cipherText.length);
+
+  var offset = 0;
+  while (offset < cipherText.length) {
+    offset += cbc.processBlock(cipherText, offset, paddedPlainText, offset);
+  }
+  assert(offset == cipherText.length);
+
+  return paddedPlainText;
+}
 
 Future<bool> decryptFile(
     String srcPath, String destPath, String key, String iv) async {
@@ -12,10 +28,11 @@ Future<bool> decryptFile(
       await destFile.delete();
       await destFile.create();
     }
-    final encrypter = Encrypter(AES(Key.fromUtf8(key)));
-    final encrypted = Encrypted.fromUtf8(srcFile.readAsStringSync());
-    final decrypted = encrypter.decrypt(encrypted, iv: IV.fromUtf8(iv));
-    await destFile.writeAsString(decrypted);
+
+    final decrypted = aesCbcDecrypt(
+        utf8.encode(key), utf8.encode(iv), srcFile.readAsBytesSync());
+    await destFile.writeAsBytes(decrypted);
+    print('wrote file');
     return true;
   } catch (e) {
     print(e);
