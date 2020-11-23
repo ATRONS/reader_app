@@ -1,5 +1,6 @@
 import 'package:atrons_mobile/models/material.dart';
-import 'package:atrons_mobile/providers/material_provider.dart';
+import 'package:atrons_mobile/providers/loading_state.dart';
+import 'package:atrons_mobile/providers/shelf_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../fragments/body_builder.dart';
@@ -17,23 +18,30 @@ class _ShelfPageState extends State<ShelfPage> {
   @override
   void initState() {
     super.initState();
+    Provider.of<ShelfProvider>(context, listen: false)
+        .fetchDownloadedMaterials();
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<MaterialProvider>(context, listen: false);
-    return FutureBuilder(
-      future: provider.getDownloadedMaterials(),
-      builder: (ctx, snapshot) {
-        if (!snapshot.hasData) {
+    return Selector<ShelfProvider, LoadingState>(
+      selector: (ctx, model) => model.loadingState,
+      builder: (ctx, state, child) {
+        if (state == LoadingState.loading) {
           return Center(child: CircularProgressIndicator());
         }
+
+        if (state == LoadingState.failed) {
+          return Center(child: Text('Should not happen'));
+        }
+
+        final provider = Provider.of<ShelfProvider>(context, listen: false);
 
         return BodyBuilder(
           child: ListView(
             children: <Widget>[
               // _buildCurrentMaterial(),
-              _buildBodyList(snapshot.data)
+              _buildBodyList(provider.downloadedMaterials)
             ],
           ),
         );

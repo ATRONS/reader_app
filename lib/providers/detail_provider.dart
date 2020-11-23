@@ -2,12 +2,14 @@ import 'dart:io';
 import 'package:atrons_mobile/database/downloads.dart';
 import 'package:atrons_mobile/fragments/download_alert.dart';
 import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/providers/shelf_provider.dart';
 import 'package:atrons_mobile/utils/api.dart';
 import 'package:atrons_mobile/utils/file_helper.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 import 'loading_state.dart';
 
@@ -50,7 +52,10 @@ class DetailProvider extends ChangeNotifier {
     ).then((v) async {
       if (v != null) {
         final mini = selectedMaterial.toMiniJSON();
-        _downloadsDb.addMaterial(mini);
+        mini['cover_img_file_url'] = await getImgFilePath(mini['_id']);
+        final shelfProvider =
+            Provider.of<ShelfProvider>(context, listen: false);
+        _downloadsDb.addMaterial(shelfProvider, mini);
         _isDownloaded = true;
         return notifyListeners();
       }
