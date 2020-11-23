@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import './book_card.dart';
 import '../theme/app_theme.dart';
 import '../utils/router.dart';
-import '../views/genres/booksInGenre.dart';
 import '../utils/helper_funcs.dart';
 
 class Booktab extends StatefulWidget {
