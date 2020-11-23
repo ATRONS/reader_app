@@ -40,7 +40,6 @@ class _DownloadAlertState extends State<DownloadAlert> {
         });
       },
     ).then((val) async {
-      // if (receivedBytes == fileSize) {
       await dio
           .download(imgUrl, imgDownloadPath, deleteOnError: true)
           .then((value) {
@@ -49,7 +48,6 @@ class _DownloadAlertState extends State<DownloadAlert> {
         print(err);
         Navigator.pop(context);
       });
-      // }
     }).catchError((err) {
       print(err);
       Navigator.pop(context);
