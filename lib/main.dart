@@ -1,7 +1,7 @@
 import 'package:atrons_mobile/providers/app_provider.dart';
 import 'package:atrons_mobile/providers/detail_provider.dart';
 import 'package:atrons_mobile/providers/material_provider.dart';
-import 'package:atrons_mobile/views/auth/login.dart';
+import 'package:atrons_mobile/views/auth/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           title: Constants.appName,
           theme:
               data == 'dark' ? CustomTheme.darkTheme : CustomTheme.lightTheme,
-          home: LoginPage(),
+          home: SignupPage(),
         );
       },
       selector: (buildContext, providerapp) => providerapp.thethemenow,
