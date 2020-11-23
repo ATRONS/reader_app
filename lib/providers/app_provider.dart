@@ -1,9 +1,12 @@
+import 'package:atrons_mobile/utils/api.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppProvider extends ChangeNotifier {
+  final _api = Api();
   AppProvider() {
     checkTheme();
   }
@@ -50,5 +53,19 @@ class AppProvider extends ChangeNotifier {
     }
 
     return t;
+  }
+
+  void signupUser(
+      String firstname, String lastname, String email, String password) {
+    _api
+        .signupReader(firstname, lastname, email, password)
+        .then((Response res) async {
+      final Map<String, dynamic> body = res.data;
+      if (!body['success']) {
+        print(body['message']);
+      }
+    }).catchError((err) {
+      print(err);
+    });
   }
 }
