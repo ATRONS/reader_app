@@ -1,4 +1,10 @@
+import 'package:atrons_mobile/providers/loading_state.dart';
+import 'package:atrons_mobile/providers/user_provider.dart';
+import 'package:atrons_mobile/utils/router.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../home_screen.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -10,6 +16,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(16.0),
@@ -24,7 +31,7 @@ class _SignupPageState extends State<SignupPage> {
             SizedBox(
               height: 50,
             ),
-            _buildButtons(),
+            _buildButtons(provider),
           ],
         ),
       ),
@@ -122,21 +129,40 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildButtons() {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-          height: 50,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Theme.of(context).accentColor),
-          child: Center(
-            child: Text(
-              "Sign up",
-              style: TextStyle(color: Colors.white),
-            ),
-          )),
+  Widget _buildButtons(UserProvider provider) {
+    return Selector<UserProvider, AuthenticationState>(
+      builder: (context, data, child) {
+        if (data == AuthenticationState.authenticating) {
+          return CircularProgressIndicator();
+        }
+        return InkWell(
+          onTap: () {
+            provider.signupUser({
+              "firstname": firstname,
+              "lastname": lastname,
+              "email": email,
+              "password": password
+            }, _doSignup);
+            _doSignup();
+          },
+          child: Container(
+              height: 50,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Theme.of(context).accentColor),
+              child: Center(
+                  child: Text(
+                "Sign up",
+                style: TextStyle(color: Colors.white),
+              ))),
+        );
+      },
+      selector: (buildContext, usrprovider) => usrprovider.signupStatus,
     );
+  }
+
+  void _doSignup() {
+    MyRouter.pushPageReplacement(context, HomeScreen());
   }
 }

@@ -1,6 +1,9 @@
+import 'package:atrons_mobile/providers/loading_state.dart';
+import 'package:atrons_mobile/providers/user_provider.dart';
 import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/views/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,8 +11,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  var email, password;
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(16.0),
@@ -24,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 50,
             ),
-            _buildButtons(),
+            _buildButtons(provider),
           ],
         ),
       ),
@@ -66,6 +71,9 @@ class _LoginPageState extends State<LoginPage> {
                   border: InputBorder.none,
                   hintText: "Email",
                   hintStyle: TextStyle(color: Colors.grey)),
+              onChanged: (value) {
+                email = value;
+              },
             ),
           ),
           Container(
@@ -78,6 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                   border: InputBorder.none,
                   hintText: "Password",
                   hintStyle: TextStyle(color: Colors.grey)),
+              onChanged: (value) {
+                password = value;
+              },
               obscureText: true,
             ),
           ),
@@ -86,23 +97,39 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildButtons() {
-    return InkWell(
-      onTap: () {
-        MyRouter.pushPageReplacement(context, HomeScreen());
+  Widget _buildButtons(UserProvider provider) {
+    return Selector<UserProvider, AuthenticationState>(
+      builder: (context, data, child) {
+        if (data == AuthenticationState.authenticating) {
+          return Container(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(),
+          );
+        }
+        return InkWell(
+          onTap: () {
+            provider.loginUser(email, password, _doLogin);
+          },
+          child: Container(
+              height: 50,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Theme.of(context).accentColor),
+              child: Center(
+                child: Text(
+                  "Login",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )),
+        );
       },
-      child: Container(
-          height: 50,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Theme.of(context).accentColor),
-          child: Center(
-            child: Text(
-              "Login",
-              style: TextStyle(color: Colors.white),
-            ),
-          )),
+      selector: (buildContext, usrprovider) => usrprovider.loginStatus,
     );
+  }
+
+  void _doLogin() {
+    MyRouter.pushPageReplacement(context, HomeScreen());
   }
 }

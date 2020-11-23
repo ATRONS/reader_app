@@ -1,6 +1,6 @@
 import 'package:atrons_mobile/providers/user_provider.dart';
 import 'package:atrons_mobile/utils/router.dart';
-import 'package:atrons_mobile/views/home_screen.dart';
+import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +17,7 @@ class _SplashState extends State<SplashScreen> {
         .fetchUserInfo()
         .then((value) {
       Future.delayed(Duration(seconds: 1), () {
-        MyRouter.pushPageReplacement(context, HomeScreen());
+        MyRouter.pushPageReplacement(context, LoginPage());
       });
     });
     super.initState();
