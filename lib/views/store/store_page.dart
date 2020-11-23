@@ -1,4 +1,3 @@
-import 'package:atrons_mobile/theme/app_theme.dart';
 import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/providers/loading_state.dart';
