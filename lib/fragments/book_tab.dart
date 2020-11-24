@@ -186,7 +186,8 @@ class _BooktabState extends State<Booktab> {
           Flexible(
             child: Text(
               'Popular of $genereName',
-              style: Style.blackTextH2,
+              style: TextStyle(
+                  color: Theme.of(context).primaryColorDark, fontSize: 16),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
