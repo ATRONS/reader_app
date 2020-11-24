@@ -1,3 +1,5 @@
+import 'package:atrons_mobile/providers/user_provider.dart';
+import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/router.dart';
@@ -49,6 +51,11 @@ class _PersonalPageState extends State<PersonalPage> {
         'title': 'Licenses',
         'function': () => _pushPageDialog(LicensePage()),
       },
+      {
+        'icon': Feather.log_out,
+        'title': 'Logout',
+        'function': () => _logoutAndReplacePage(LoginPage()),
+      }
     ];
   }
 
@@ -118,6 +125,15 @@ class _PersonalPageState extends State<PersonalPage> {
 
   _pushPage(Widget page) {
     MyRouter.pushPage(context, page);
+  }
+
+  _logoutAndReplacePage(Widget page) {
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    provider.fetchUserInfo().then((value) {
+      // print(value[0]['token']);
+      provider.logoutUser(value[0]['token']);
+      MyRouter.pushPageReplacement(context, page);
+    });
   }
 
   _pushPageDialog(Widget page) {
