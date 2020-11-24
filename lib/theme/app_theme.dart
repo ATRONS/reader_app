@@ -11,15 +11,17 @@ class CustomTheme {
   static Color dark = Colors.black;
 
   static ThemeData lightTheme = ThemeData(
-      backgroundColor: lightBG,
-      primaryColor: lightPrimary,
-      accentColor: lightAccent,
-      cursorColor: lightAccent,
-      scaffoldBackgroundColor: lightBG,
-      appBarTheme: AppBarTheme(
-        elevation: 0.0,
-      ),
-      dividerColor: dark);
+    backgroundColor: lightBG,
+    primaryColor: lightPrimary,
+    accentColor: lightAccent,
+    cursorColor: lightAccent,
+    scaffoldBackgroundColor: lightBG,
+    appBarTheme: AppBarTheme(
+      elevation: 0.0,
+    ),
+    dividerColor: dark,
+    primaryColorDark: dark,
+  );
 
   static ThemeData darkTheme = ThemeData(
       brightness: Brightness.dark,
@@ -31,5 +33,6 @@ class CustomTheme {
       appBarTheme: AppBarTheme(
         elevation: 0.0,
       ),
-      dividerColor: lightPrimary);
+      dividerColor: lightPrimary,
+      primaryColorDark: lightPrimary);
 }
