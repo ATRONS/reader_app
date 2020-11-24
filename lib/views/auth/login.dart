@@ -100,13 +100,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildButtons(UserProvider provider) {
     return Selector<UserProvider, AuthenticationState>(
       builder: (context, data, child) {
-        if (data == AuthenticationState.authenticating) {
-          return Container(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(),
-          );
-        }
         return InkWell(
           onTap: () {
             provider.loginUser(email, password, _doLogin);
@@ -118,10 +111,29 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(5),
                   color: Theme.of(context).accentColor),
               child: Center(
-                child: Text(
-                  "Login",
-                  style: TextStyle(color: Colors.white),
-                ),
+                child: data == AuthenticationState.authenticating
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Center(
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              margin: EdgeInsets.all(5),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor:
+                                    AlwaysStoppedAnimation(Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        "Login",
+                        style: TextStyle(color: Colors.white),
+                      ),
               )),
         );
       },
