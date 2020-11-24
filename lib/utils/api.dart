@@ -12,6 +12,7 @@ class Api {
   static String downloadMaterialUrl = mediaBaseUrl + '/materials';
   static String signupUrl = readerBaseUrl + '/signup';
   static String loginUrl = readerBaseUrl + '/login';
+  static String logoutUrl = readerBaseUrl + '/logout';
 
   Future<Response> getInitialData() {
     return dio.get(initialDataUrl);
@@ -33,5 +34,11 @@ class Api {
 
   Future<Response> loginReader(String email, String password) {
     return dio.post('$loginUrl', data: {"email": email, "password": password});
+  }
+
+  Future<Response> logoutReader(String token) {
+    dio.options.headers['content-Type'] = 'application/json';
+    dio.options.headers["authorization"] = token;
+    return dio.post('$logoutUrl', data: {});
   }
 }
