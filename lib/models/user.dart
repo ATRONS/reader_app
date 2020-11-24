@@ -10,4 +10,15 @@ class User {
         lastname = json['lastname'],
         email = json['email'],
         token = json['token'];
+
+  Map<String, dynamic> toUserJSON() {
+    return {
+      '_id': this.id,
+      'iD': this.id,
+      'firstname': this.firstname,
+      'lastname': this.lastname,
+      'email': this.email,
+      'token': this.token,
+    };
+  }
 }
