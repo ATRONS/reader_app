@@ -1,5 +1,6 @@
 import 'package:atrons_mobile/providers/user_provider.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
+import 'package:atrons_mobile/views/purchase/purchase.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/router.dart';
@@ -25,6 +26,11 @@ class _PersonalPageState extends State<PersonalPage> {
         'icon': Feather.heart,
         'title': 'Favorites',
         'function': () => _pushPage(Favorites()),
+      },
+      {
+        'icon': Feather.heart,
+        'title': 'To Purchase',
+        'function': () => _pushPage(Purchase()),
       },
       {
         'icon': Feather.download,
