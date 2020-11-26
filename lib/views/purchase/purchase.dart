@@ -1,6 +1,14 @@
+import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/payment/payment.dart';
 import 'package:flutter/material.dart';
 
-class Purchase extends StatelessWidget {
+class Purchase extends StatefulWidget {
+  _PurchaseState createState() => _PurchaseState();
+}
+
+class _PurchaseState extends State<Purchase> {
+  String _buyRentValue = "buy";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +59,12 @@ class Purchase extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Radio(
-                      value: 1,
-                      groupValue: "buy",
+                      value: "buy",
                       activeColor: Colors.blue,
-                      onChanged: (val) {},
+                      groupValue: _buyRentValue,
+                      onChanged: (value) => setState(
+                        () => _buyRentValue = value,
+                      ),
                     ),
                     Text(
                       "Buy",
@@ -67,14 +77,12 @@ class Purchase extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Radio(
-                      value: 0,
-                      groupValue: "rent",
+                      value: "rent",
                       activeColor: Colors.blue,
-                      onChanged: (value) {
-                        // setState(() {
-                        //   _character = value;
-                        // });
-                      },
+                      groupValue: _buyRentValue,
+                      onChanged: (value) => setState(
+                        () => _buyRentValue = value,
+                      ),
                     ),
                     Text(
                       "Rent",
@@ -83,14 +91,17 @@ class Purchase extends StatelessWidget {
                   ],
                 )),
             Container(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-                child: Text(
-                  "number of days",
-                  style: TextStyle(fontSize: 16.0, color: Colors.grey.shade600),
-                ),
-              ),
+              child: _buyRentValue == "rent"
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 8.0),
+                      child: Text(
+                        "number of days",
+                        style: TextStyle(
+                            fontSize: 16.0, color: Colors.grey.shade600),
+                      ),
+                    )
+                  : Container(),
               width: double.infinity,
               margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
@@ -101,7 +112,7 @@ class Purchase extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("total : "),
+                Text("Total : "),
                 Text(
                   "34 ETB",
                   style: TextStyle(fontSize: 24),
@@ -111,11 +122,13 @@ class Purchase extends StatelessWidget {
             Container(
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
                 child: FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    MyRouter.pushPage(context, PaymentPage());
+                  },
                   child: Text(
-                    "Finish Purchase",
+                    "Continue to payment",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -124,7 +137,7 @@ class Purchase extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(3.0),
               ),
             ),
           ],
