@@ -135,11 +135,7 @@ class _PersonalPageState extends State<PersonalPage> {
 
   _logoutAndReplacePage(Widget page) {
     final provider = Provider.of<UserProvider>(context, listen: false);
-    provider.fetchUserInfo().then((value) {
-      // print(value[0]['token']);
-      provider.logoutUser(value[0]['token']);
-      MyRouter.pushPageReplacement(context, page);
-    });
+    provider.logoutUser();
   }
 
   _pushPageDialog(Widget page) {
