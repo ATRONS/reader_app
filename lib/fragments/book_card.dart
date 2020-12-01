@@ -1,15 +1,11 @@
 import 'package:atrons_mobile/models/material.dart';
 import 'package:flutter/material.dart';
 import '../utils/router.dart';
-// import './loading_widget.dart';
-// import 'package:uuid/uuid.dart';
 import '../views/details/details.dart';
 
 class BookCard extends StatelessWidget {
-  MiniMaterial material;
+  final MiniMaterial material;
   BookCard({Key key, @required this.material}) : super(key: key);
-
-  // static final uuid = Uuid();
 
   @override
   Widget build(BuildContext context) {
