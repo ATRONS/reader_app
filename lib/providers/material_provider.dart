@@ -25,8 +25,6 @@ class MaterialProvider extends ChangeNotifier {
   Map<String, List<MiniMaterial>> _popular;
   Map<String, List<MiniMaterial>> get popular => _popular;
 
-  List<MiniMaterial> shelfMaterialsList;
-
   LoadingState initialDataLoadingState = LoadingState.loading;
   LoadingState bookLoadingState = LoadingState.loading;
   LoadingState magazineLoadingState = LoadingState.loading;
@@ -64,6 +62,17 @@ class MaterialProvider extends ChangeNotifier {
       return notifyListeners();
     });
   }
+
+  void loadNewsPapers() async {
+    _api.getProviders("NEWSPAPER").then((Response res) {
+      print(res.data);
+    }).catchError((err) {
+      newspapaerLoadingState = LoadingState.failed;
+      notifyListeners();
+    });
+  }
+
+  void loadMagazines() {}
 
   Future<List<MiniMaterial>> getDownloadedMaterials() async {
     return await _downloadsDb.getAllMaterials();
