@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class AppState {
+  static const KEY = 'app_user_state_key';
+  static const FIRST_TIME_OPENED = 'first_time_opened';
+  static const LOGGED_OUT = 'user_logged_out';
+  static const LOGGED_IN = 'user_logged_in';
+}
+
 class AppProvider extends ChangeNotifier {
   AppProvider() {
     checkTheme();
@@ -50,5 +57,15 @@ class AppProvider extends ChangeNotifier {
     }
 
     return t;
+  }
+
+  Future<String> getAppState() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(AppState.KEY) ?? AppState.FIRST_TIME_OPENED;
+  }
+
+  void setAppState(String state) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(AppState.KEY, state);
   }
 }
