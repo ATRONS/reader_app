@@ -1,5 +1,6 @@
 import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/providers/user_provider.dart';
+import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/utils/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<UserProvider>(context, listen: false);
+
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(16.0),
@@ -24,13 +26,9 @@ class _SignupPageState extends State<SignupPage> {
           children: <Widget>[
             _buildLogo(),
             _buildAppName(),
-            SizedBox(
-              height: 20,
-            ),
+            addVerticalSpace(20),
             _buildTextFields(),
-            SizedBox(
-              height: 50,
-            ),
+            addVerticalSpace(50),
             _buildButtons(provider),
           ],
         ),
