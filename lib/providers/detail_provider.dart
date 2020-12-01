@@ -72,8 +72,7 @@ class DetailProvider extends ChangeNotifier {
         return notifyListeners();
       }
 
-      _selectedMaterial = MaterialDetail.fromJSON(body['data']['material']);
-      print(body['data']['material']);
+      _selectedMaterial = MaterialDetail.fromJSON(body['data']);
       _loadingState = LoadingState.success;
       return notifyListeners();
     }).catchError((err) {
