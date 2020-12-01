@@ -1,4 +1,4 @@
-import 'package:atrons_mobile/providers/user_provider.dart';
+import 'package:atrons_mobile/providers/app_provider.dart';
 import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:atrons_mobile/views/auth/signup.dart';
@@ -15,31 +15,40 @@ class SplashScreen extends StatefulWidget {
 class _SplashState extends State<SplashScreen> {
   @override
   void initState() {
-    Provider.of<UserProvider>(context, listen: false)
-        .fetchUserInfo()
-        .then((value) {
-      if (value.length == 0)
-        MyRouter.pushPageReplacement(context, LoginPage());
-      else
-        MyRouter.pushPageReplacement(context, HomeScreen());
-    });
+    Future.delayed(Duration(seconds: 2), _checkAppStateAndNavigate);
     super.initState();
+  }
+
+  _checkAppStateAndNavigate() async {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    final state = await appProvider.getAppState();
+
+    switch (state) {
+      case AppState.FIRST_TIME_OPENED:
+        MyRouter.pushPageReplacement(context, SignupPage());
+        break;
+      case AppState.LOGGED_IN:
+        MyRouter.pushPageReplacement(context, HomeScreen());
+        break;
+      case AppState.LOGGED_OUT:
+        MyRouter.pushPageReplacement(context, LoginPage());
+        break;
+      default:
+        print('this should never happen');
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: Future.delayed(Duration(seconds: 2), () => true),
-        builder: (ctx, snapshot) {
-          return SafeArea(
-            child: Scaffold(
-              body: Center(
-                child: Text(
-                  "This is supposed to be the splash screen",
-                ),
-              ),
-            ),
-          );
-        });
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Text(
+            "This is supposed to be the splash screen",
+          ),
+        ),
+      ),
+    );
   }
 }
