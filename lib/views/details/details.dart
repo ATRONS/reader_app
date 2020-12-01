@@ -24,9 +24,9 @@ class _DetailsState extends State<Details> {
 
   @override
   void initState() {
-    super.initState();
     Provider.of<DetailProvider>(context, listen: false)
         .getMaterialDetail(widget.id);
+    super.initState();
   }
 
   @override

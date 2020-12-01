@@ -140,27 +140,25 @@ class _SignupPageState extends State<SignupPage> {
               "lastname": lastname,
               "email": email,
               "password": password
-            }, _doSignup);
-            _doSignup();
+            }, context);
           },
           child: Container(
-              height: 50,
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Theme.of(context).accentColor),
-              child: Center(
-                  child: Text(
+            height: 50,
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Theme.of(context).accentColor,
+            ),
+            child: Center(
+              child: Text(
                 "Sign up",
                 style: TextStyle(color: Colors.white),
-              ))),
+              ),
+            ),
+          ),
         );
       },
       selector: (buildContext, usrprovider) => usrprovider.signupStatus,
     );
-  }
-
-  void _doSignup() {
-    MyRouter.pushPageReplacement(context, HomeScreen());
   }
 }

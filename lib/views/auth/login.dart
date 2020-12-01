@@ -1,7 +1,5 @@
 import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/providers/user_provider.dart';
-import 'package:atrons_mobile/utils/router.dart';
-import 'package:atrons_mobile/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -102,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
       builder: (context, data, child) {
         return InkWell(
           onTap: () {
-            provider.loginUser(email, password, _doLogin);
+            provider.loginUser(email, password, context);
           },
           child: Container(
               height: 50,
@@ -139,9 +137,5 @@ class _LoginPageState extends State<LoginPage> {
       },
       selector: (buildContext, usrprovider) => usrprovider.loginStatus,
     );
-  }
-
-  void _doLogin() {
-    MyRouter.pushPageReplacement(context, HomeScreen());
   }
 }
