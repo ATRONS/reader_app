@@ -122,23 +122,24 @@ class _StorePageState extends State<StorePage>
 
   _buildNewsPaperTab() {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: 3,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.0),
-              child: BookListItem(
-                title: 'entry.title.t',
-                author: 'entry.author.name.t',
-                desc:
-                    'this book nd and the describes about thee war on the 2nd and th',
-              ),
-            );
-          },
-        ));
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: 3,
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: BookListItem(
+              title: 'entry.title.t',
+              author: 'entry.author.name.t',
+              desc:
+                  'this book nd and the describes about thee war on the 2nd and th',
+            ),
+          );
+        },
+      ),
+    );
   }
 
   _buildMegazineTab() {
