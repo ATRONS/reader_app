@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:atrons_mobile/models/user.dart';
 import 'package:objectdb/objectdb.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -10,7 +11,7 @@ class UsersDB {
     return path;
   }
 
-  void addUser(Map item) async {
+  addUser(Map item) async {
     final db = ObjectDB(await getPath());
     db.open();
     db.insert(item);
@@ -27,13 +28,13 @@ class UsersDB {
     return val;
   }
 
-  Future<List> getUser() async {
+  Future<User> getUser() async {
     final db = ObjectDB(await getPath());
     db.open();
     List val = await db.find({});
     db.tidy();
     await db.close();
-    return val;
+    return User.fromJSON(val[0]);
   }
 
   void clear() async {
