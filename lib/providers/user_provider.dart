@@ -1,8 +1,12 @@
 import 'package:atrons_mobile/database/readers.dart';
 import 'package:atrons_mobile/models/user.dart';
+import 'package:atrons_mobile/providers/app_provider.dart';
 import 'package:atrons_mobile/utils/api.dart';
+import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/home_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'loading_state.dart';
 
 class UserProvider extends ChangeNotifier {
@@ -14,30 +18,24 @@ class UserProvider extends ChangeNotifier {
   AuthenticationState loginStatus = AuthenticationState.unAuthenticated;
 
   Future fetchUserInfo() async {
-    final usrinfo = await _readersDB.getUser();
-    return usrinfo;
+    _user = await _readersDB.getUser();
   }
 
-  void signupUser(Map<String, String> credentials, dosignup) async {
+  void signupUser(Map<String, String> credentials, BuildContext context) async {
     signupStatus = AuthenticationState.authenticating;
     notifyListeners();
 
-    await _api.signupReader(credentials).then((Response res) {
+    await _api.signupReader(credentials).then((Response res) async {
       final Map<String, dynamic> body = res.data;
 
       if (!body['success']) {
         signupStatus = AuthenticationState.failed;
-        notifyListeners();
+        return notifyListeners();
       }
 
-      _user = User.fromJSON(body['data']['user_info']);
-      _user.token = body['data']['token'];
+      await _createUser(context, body['data']);
       signupStatus = AuthenticationState.success;
-      final usr = _user.toUserJSON();
-
-      _readersDB.addUser(usr);
-      dosignup();
-      notifyListeners();
+      MyRouter.pushPageReplacement(context, HomeScreen());
     }).catchError((err) {
       print(err);
       signupStatus = AuthenticationState.failed;
@@ -45,19 +43,20 @@ class UserProvider extends ChangeNotifier {
     });
   }
 
-  void loginUser(String email, String password, dologin) async {
+  void loginUser(String email, String password, BuildContext context) async {
     loginStatus = AuthenticationState.authenticating;
     notifyListeners();
-    await _api.loginReader(email, password).then((Response res) {
+
+    await _api.loginReader(email, password).then((Response res) async {
       final Map<String, dynamic> body = res.data;
       if (!body['success']) {
         loginStatus = AuthenticationState.failed;
-        notifyListeners();
+        return notifyListeners();
       }
 
+      await _createUser(context, body['data']);
       loginStatus = AuthenticationState.success;
-      dologin();
-      notifyListeners();
+      MyRouter.pushPageReplacement(context, HomeScreen());
     }).catchError((err) {
       print(err);
       loginStatus = AuthenticationState.failed;
@@ -65,16 +64,17 @@ class UserProvider extends ChangeNotifier {
     });
   }
 
-  void logoutUser(String token) async {
-    await _api.logoutReader(token).then((Response res) {
-      final Map<String, dynamic> body = res.data;
-      if (!body['success']) {
-        print('hard this shuttle');
-      }
-      print('loggedout successfully');
-      _readersDB.removeUser(token);
-    }).catchError((err) {
-      print(err);
-    });
+  void logoutUser() async {
+    await _api.logoutReader().catchError((err) => print(err));
+  }
+
+  _createUser(BuildContext context, dynamic data) async {
+    _user = User.fromJSON(data['user_info']);
+    _user.token = data['token'];
+    Api.setAuthToken(_user.token);
+
+    final appStateProvider = Provider.of<AppProvider>(context, listen: false);
+    await _readersDB.addUser(_user.toUserJSON());
+    await appStateProvider.setAppState(AppState.LOGGED_IN);
   }
 }
