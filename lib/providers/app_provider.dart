@@ -64,7 +64,7 @@ class AppProvider extends ChangeNotifier {
     return prefs.getString(AppState.KEY) ?? AppState.FIRST_TIME_OPENED;
   }
 
-  void setAppState(String state) async {
+  setAppState(String state) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(AppState.KEY, state);
   }
