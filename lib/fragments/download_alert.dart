@@ -1,8 +1,6 @@
 import 'package:atrons_mobile/utils/api.dart';
-import 'package:atrons_mobile/utils/file_helper.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/models/material.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_alert.dart';
@@ -17,47 +15,34 @@ class DownloadAlert extends StatefulWidget {
 }
 
 class _DownloadAlertState extends State<DownloadAlert> {
-  final dio = new Dio();
+  final _api = Api();
 
   int received = 0;
   String progress = '0';
+  int fileSize;
 
-  void download() async {
-    final fileSize = widget.material.file['size'];
-    final fileurl = Api.baseUrl + widget.material.file['url'];
-    final imgUrl = widget.material.coverImgUrl;
-    final downloadPath = await getEpubFilePath(widget.material.id);
-    final imgDownloadPath = await getImgFilePath(widget.material.id);
-
-    await dio.download(
-      fileurl,
-      downloadPath,
-      deleteOnError: true,
-      onReceiveProgress: (receivedBytes, totalBytes) async {
-        setState(() {
-          received = receivedBytes;
-          progress = (received / fileSize * 100).toStringAsFixed(0);
-        });
-      },
-    ).then((val) async {
-      await dio
-          .download(imgUrl, imgDownloadPath, deleteOnError: true)
-          .then((value) {
-        Navigator.pop(context, '${Helpers.formatBytes(fileSize, 1)}');
-      }).catchError((err) {
-        print(err);
-        Navigator.pop(context);
-      });
-    }).catchError((err) {
-      print(err);
-      Navigator.pop(context);
+  onDownloadProgress(int receivedBytes, int totalBytes) async {
+    setState(() {
+      received = receivedBytes;
+      progress = (received / fileSize * 100).toStringAsFixed(0);
     });
+  }
+
+  onDownloadFinish() {
+    Navigator.pop(context, '${Helpers.formatBytes(fileSize, 1)}');
+  }
+
+  onDownloadError(err) {
+    print(err);
+    Navigator.pop(context);
   }
 
   @override
   void initState() {
     super.initState();
-    download();
+    fileSize = widget.material.file['size'];
+    _api.download(
+        widget.material, onDownloadProgress, onDownloadFinish, onDownloadError);
   }
 
   @override
