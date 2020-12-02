@@ -13,4 +13,6 @@ class Constants {
   static String loadingFailed = 'Loading failed';
   static String searchHint = 'Search';
   static String open = 'Open';
+  static String alreadyHaveAnAccount = 'Already have an Account ? Log in';
+  static String dontHaveAnAccount = 'Dont have an Account yet ? Sign up';
 }
