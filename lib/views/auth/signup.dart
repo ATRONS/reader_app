@@ -1,7 +1,9 @@
 import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/providers/user_provider.dart';
+import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,17 +22,38 @@ class _SignupPageState extends State<SignupPage> {
     final provider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(16.0),
-        child: ListView(
-          children: <Widget>[
-            _buildLogo(),
-            _buildAppName(),
-            addVerticalSpace(20),
-            _buildTextFields(),
-            addVerticalSpace(50),
-            _buildButtons(provider),
-          ],
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              _buildLogo(),
+              _buildAppName(),
+              addVerticalSpace(20),
+              _buildTextFields(),
+              addVerticalSpace(50),
+              _buildButtons(provider),
+              _buildAlreadyHaveAnAccount(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAlreadyHaveAnAccount() {
+    return GestureDetector(
+      onTap: () {
+        MyRouter.pushPageReplacement(context, LoginPage());
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: Center(
+          child: Text(
+            Constants.alreadyHaveAnAccount,
+            style: TextStyle(color: Colors.lightBlue),
+          ),
         ),
       ),
     );
