@@ -3,6 +3,7 @@ import 'package:atrons_mobile/models/user.dart';
 import 'package:atrons_mobile/providers/app_provider.dart';
 import 'package:atrons_mobile/utils/api.dart';
 import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:atrons_mobile/views/home_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,8 +65,12 @@ class UserProvider extends ChangeNotifier {
     });
   }
 
-  void logoutUser() async {
+  void logoutUser(BuildContext ctx) async {
+    final appProvider = Provider.of<AppProvider>(ctx, listen: false);
     await _api.logoutReader().catchError((err) => print(err));
+    await _readersDB.removeUser();
+    await appProvider.setAppState(AppState.LOGGED_OUT);
+    MyRouter.pushPageReplacement(ctx, LoginPage());
   }
 
   _createUser(BuildContext context, dynamic data) async {
