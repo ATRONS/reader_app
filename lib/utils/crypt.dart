@@ -32,7 +32,6 @@ Future<bool> decryptFile(
     final decrypted = aesCbcDecrypt(
         utf8.encode(key), utf8.encode(iv), srcFile.readAsBytesSync());
     await destFile.writeAsBytes(decrypted);
-    print('wrote file');
     return true;
   } catch (e) {
     print(e);
