@@ -66,8 +66,8 @@ class PaymentPage extends StatelessWidget {
               child: Card(
                 semanticContainer: true,
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: Image.network(
-                  'https://media.licdn.com/dms/image/C4D0BAQE_qTOpX0QhkA/company-logo_200_200/0?e=2159024400&v=beta&t=RbGbeQSvh9GAEINQKyWyvvFJv0khphM9LKefen3FRMc',
+                child: Image.asset(
+                  'assets/images/warandpeace.jpg',
                   fit: BoxFit.fill,
                 ),
                 shape: RoundedRectangleBorder(
