@@ -14,16 +14,16 @@ class UsersDB {
   addUser(Map item) async {
     final db = ObjectDB(await getPath());
     db.open();
-    db.insert(item);
-    db.tidy();
+    await db.insert(item);
+    await db.tidy();
     await db.close();
   }
 
-  Future<int> removeUser(String token) async {
+  Future<int> removeUser() async {
     final db = ObjectDB(await getPath());
     db.open();
-    int val = await db.remove({'token': token});
-    db.tidy();
+    int val = await db.remove({});
+    await db.tidy();
     await db.close();
     return val;
   }
@@ -32,7 +32,7 @@ class UsersDB {
     final db = ObjectDB(await getPath());
     db.open();
     List val = await db.find({});
-    db.tidy();
+    await db.tidy();
     await db.close();
     return User.fromJSON(val[0]);
   }
@@ -40,7 +40,7 @@ class UsersDB {
   void clear() async {
     final db = ObjectDB(await getPath());
     db.open();
-    db.remove({});
-    db.close();
+    await db.remove({});
+    await db.close();
   }
 }
