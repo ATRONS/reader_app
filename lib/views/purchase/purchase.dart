@@ -1,6 +1,9 @@
+import 'package:atrons_mobile/providers/detail_provider.dart';
+import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/views/payment/payment.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Purchase extends StatefulWidget {
   _PurchaseState createState() => _PurchaseState();
@@ -11,6 +14,9 @@ class _PurchaseState extends State<Purchase> {
 
   @override
   Widget build(BuildContext context) {
+    final detailProvicer = Provider.of<DetailProvider>(context, listen: false);
+    final material = detailProvicer.selectedMaterial;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Purchase Page"),
@@ -20,76 +26,149 @@ class _PurchaseState extends State<Purchase> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  children: <Widget>[
-                    ClipRRect(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
-                        ),
-                        child: Image.asset(
-                          'assets/images/warandpeace.jpg',
-                          height: 200.0,
-                          fit: BoxFit.cover,
-                        )),
-                    Column(
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.all(13),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                    child: Image.network(
+                      material.coverImgUrl,
+                      height: 200.0,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 5.0),
+                          Material(
+                            type: MaterialType.transparency,
                             child: Text(
-                              "Meleyayet Mot New",
+                              material.title,
                               style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold),
-                            )),
-                        Text("By Alemayehu Gelagay",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w300))
-                      ],
-                    )
-                  ],
-                )),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Text(
-                  "Choose Purchase Option",
-                  style: TextStyle(fontSize: 17),
-                )),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-                child: Row(
-                  children: <Widget>[
-                    Radio(
-                      value: "buy",
-                      activeColor: Colors.blue,
-                      groupValue: _buyRentValue,
-                      onChanged: (value) => setState(
-                        () => _buyRentValue = value,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 3,
+                            ),
+                          ),
+                          SizedBox(height: 5.0),
+                          Material(
+                            type: MaterialType.transparency,
+                            child: Text(
+                              material.provider['display_name'],
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                          Material(
+                            type: MaterialType.transparency,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  Constants.sellingPrice,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                  ),
+                                  maxLines: 3,
+                                ),
+                                Text(
+                                  '${material.price['selling']} ${Constants.currency}',
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.bold),
+                                  maxLines: 3,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 5.0),
+                          Material(
+                            type: MaterialType.transparency,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  Constants.rentPrice,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                  ),
+                                  maxLines: 3,
+                                ),
+                                Text(
+                                  '${material.price['rent']['value']} ${Constants.rentPer}',
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      "Buy",
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    )
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-                child: Row(
-                  children: <Widget>[
-                    Radio(
-                      value: "rent",
-                      activeColor: Colors.blue,
-                      groupValue: _buyRentValue,
-                      onChanged: (value) => setState(
-                        () => _buyRentValue = value,
-                      ),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Text(
+                "Choose Purchase Option",
+                style: TextStyle(fontSize: 17),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+              child: Row(
+                children: <Widget>[
+                  Radio(
+                    value: "buy",
+                    activeColor: Colors.blue,
+                    groupValue: _buyRentValue,
+                    onChanged: (value) => setState(
+                      () => _buyRentValue = value,
                     ),
-                    Text(
-                      "Rent",
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    )
-                  ],
-                )),
+                  ),
+                  Text(
+                    "Buy",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+              child: Row(
+                children: <Widget>[
+                  Radio(
+                    value: "rent",
+                    activeColor: Colors.blue,
+                    groupValue: _buyRentValue,
+                    onChanged: (value) => setState(
+                      () => _buyRentValue = value,
+                    ),
+                  ),
+                  Text(
+                    "Rent",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  )
+                ],
+              ),
+            ),
             Container(
               child: _buyRentValue == "rent"
                   ? Padding(
