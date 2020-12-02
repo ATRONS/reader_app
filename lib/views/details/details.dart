@@ -1,6 +1,7 @@
 import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/file_helper.dart';
+import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/utils/styles.dart';
 import 'package:atrons_mobile/providers/detail_provider.dart';
@@ -90,28 +91,26 @@ class _DetailsState extends State<Details> {
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       children: <Widget>[
-        SizedBox(height: 10.0),
+        addVerticalSpace(10),
         _buildImageTitleSection(detail),
-        SizedBox(height: 30.0),
+        addVerticalSpace(30),
         _buildSectionTitle('Synopsis'),
         _buildDivider(),
-        SizedBox(height: 10.0),
+        addVerticalSpace(10),
         DescriptionTextWidget(text: detail.synopsis),
-        SizedBox(height: 30.0),
+        addVerticalSpace(30),
         _buildSectionTitle('Tags'),
-        SizedBox(
-          height: 10.0,
-        ),
+        addVerticalSpace(10),
         _buildTagsSection(),
-        SizedBox(height: 30.0),
+        addVerticalSpace(30),
         _buildSectionTitleWithMore('More from Author'),
         _buildDivider(),
-        SizedBox(height: 10.0),
+        addVerticalSpace(10),
         _buildMoreBook(),
-        SizedBox(height: 30.0),
+        addVerticalSpace(30),
         _buildSectionTitleWithMore('Reviews'),
         _buildDivider(),
-        SizedBox(height: 10.0),
+        addVerticalSpace(10),
         _buildSectionReview(),
       ],
     );
