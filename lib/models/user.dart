@@ -1,6 +1,6 @@
 class User {
-  String key = 'abcdefghijklmnopqrstuvwxyzabcdef';
-  String iv = 'abcdefghijklmnop';
+  String key;
+  String iv;
   String phone = '';
   String email, firstname, lastname, token, id;
 
@@ -9,6 +9,8 @@ class User {
         firstname = json['firstname'],
         lastname = json['lastname'],
         email = json['email'],
+        key = json['key'],
+        iv = json['iv'],
         token = json['token'];
 
   Map<String, dynamic> toUserJSON() {
@@ -18,6 +20,8 @@ class User {
       'firstname': this.firstname,
       'lastname': this.lastname,
       'email': this.email,
+      'key': this.key,
+      'iv': this.iv,
       'token': this.token,
     };
   }
