@@ -42,11 +42,6 @@ class _PersonalPageState extends State<PersonalPage> {
         'title': 'Dark Mode',
         'function': () {},
       },
-      // {
-      //   'icon': Feather.moon,
-      //   'title': 'Dark Mode',
-      //   'function': () => _pushPage(Downloads()),
-      // },
       {
         'icon': Feather.info,
         'title': 'About',
@@ -100,7 +95,7 @@ class _PersonalPageState extends State<PersonalPage> {
           );
         },
         separatorBuilder: (BuildContext context, int index) {
-          return Divider();
+          return Divider(color: Colors.grey);
         },
       ),
     );
@@ -135,7 +130,7 @@ class _PersonalPageState extends State<PersonalPage> {
 
   _logoutAndReplacePage(Widget page) {
     final provider = Provider.of<UserProvider>(context, listen: false);
-    provider.logoutUser();
+    provider.logoutUser(context);
   }
 
   _pushPageDialog(Widget page) {
