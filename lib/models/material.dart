@@ -14,6 +14,17 @@ class MiniMaterial {
         coverImgFileUrl = json['cover_img_file_url'];
 }
 
+class MiniCompanyMaterial {
+  String id, about, legalName, displayName, avatarUrl;
+
+  MiniCompanyMaterial.fromJSON(Map<String, dynamic> json)
+      : id = json['_id'],
+        about = json['about'],
+        legalName = json['legal_name'],
+        displayName = json['display_name'],
+        avatarUrl = Api.baseUrl + json['avatar_url'];
+}
+
 class MaterialDetail {
   String id,
       type,

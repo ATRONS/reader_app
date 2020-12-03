@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 class MegazineListItem extends StatelessWidget {
   final String title;
-  final String edition;
+  final String legalName;
   final String desc;
+  final String coverImgUrl;
 
   MegazineListItem(
       {Key key,
       @required this.title,
-      @required this.edition,
-      @required this.desc})
+      @required this.legalName,
+      @required this.desc,
+      @required this.coverImgUrl})
       : super(key: key);
 
   @override
@@ -42,8 +44,8 @@ class MegazineListItem extends StatelessWidget {
                 borderRadius: BorderRadius.all(
                   Radius.circular(10.0),
                 ),
-                child: Image.asset(
-                  'assets/images/kumneger.jpg',
+                child: Image.network(
+                  coverImgUrl,
                   fit: BoxFit.cover,
                   height: 150.0,
                   width: 100.0,
@@ -60,7 +62,7 @@ class MegazineListItem extends StatelessWidget {
                   Material(
                     type: MaterialType.transparency,
                     child: Text(
-                      'Kumneger',
+                      title,
                       style: TextStyle(
                         fontSize: 17.0,
                         fontWeight: FontWeight.bold,
@@ -76,7 +78,7 @@ class MegazineListItem extends StatelessWidget {
                   Material(
                     type: MaterialType.transparency,
                     child: Text(
-                      'Edition 123',
+                      legalName,
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w800,

@@ -28,6 +28,7 @@ class _StorePageState extends State<StorePage>
   Widget build(BuildContext context) {
     super.build(context);
     final provider = Provider.of<MaterialProvider>(context, listen: false);
+    // print(provider.megazinesList.length);
 
     final tabs = <Widget>[Booktab(), _buildNewsPaperTab(), _buildMegazineTab()];
 
@@ -143,21 +144,21 @@ class _StorePageState extends State<StorePage>
   }
 
   _buildMegazineTab() {
+    // print(listOfMegazines.length);
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: 3,
+          // physics: NeverScrollableScrollPhysics(),
+          itemCount: 2,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 5.0),
               child: MegazineListItem(
-                title: 'entry.title.t',
-                edition: 'entry.author.name.t',
-                desc:
-                    'this the megazine describes about  megazine describes about thee on the 2nd and the  describes about thee on the 2nd and the',
-              ),
+                  title: "listOfMegazines[index].displayName",
+                  legalName: "listOfMegazines[index].legalName",
+                  desc: "listOfMegazines[index].about",
+                  coverImgUrl: "listOfMegazines[index].avatarUrl"),
             );
           },
         ));

@@ -1,3 +1,4 @@
+import 'package:atrons_mobile/fragments/rate_material.dart';
 import 'package:atrons_mobile/providers/user_provider.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:atrons_mobile/views/purchase/purchase.dart';
@@ -25,7 +26,7 @@ class _PersonalPageState extends State<PersonalPage> {
       {
         'icon': Feather.heart,
         'title': 'Favorites',
-        'function': () => _pushPage(Favorites()),
+        'function': () => _pushPage(RatePage()),
       },
       {
         'icon': Feather.heart,

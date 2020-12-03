@@ -25,6 +25,9 @@ class MaterialProvider extends ChangeNotifier {
   Map<String, List<MiniMaterial>> _popular;
   Map<String, List<MiniMaterial>> get popular => _popular;
 
+  List<MiniCompanyMaterial> _megazineList;
+  List<MiniCompanyMaterial> get megazinesList => _megazineList;
+
   LoadingState initialDataLoadingState = LoadingState.loading;
   LoadingState bookLoadingState = LoadingState.loading;
   LoadingState magazineLoadingState = LoadingState.loading;
@@ -53,6 +56,19 @@ class MaterialProvider extends ChangeNotifier {
             .toList();
         _popular[genereId] = mini;
       });
+
+      _megazineList = List.from(body['data']['magazines']['providers'])
+          .map((json) => MiniCompanyMaterial.fromJSON(json))
+          .toList();
+
+      //     List<MiniMaterial>.from(body['data']['megazines']['providers']);
+      // _newspaperList =
+      //     List<MiniMaterial>.from(body['data']['newspapers']['providers']);
+
+      print(_megazineList.length);
+      // print(_newspaperList.length);
+      // print(_megazineList);
+      // print(body['data']['newspapers']['providers']);
 
       initialDataLoadingState = LoadingState.success;
       return notifyListeners();
