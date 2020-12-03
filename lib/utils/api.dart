@@ -27,8 +27,13 @@ class Api {
     return _dio.get(initialDataUrl);
   }
 
-  Future<Response> getMaterials(String type) {
+  Future<Response> getMaterialsByType(String type) {
     final url = '$materialsUrl?type=$type';
+    return _dio.get(url);
+  }
+
+  Future<Response> getMaterialsByProvider(String providerId) {
+    final url = '$materialsUrl?provider=$providerId';
     return _dio.get(url);
   }
 
