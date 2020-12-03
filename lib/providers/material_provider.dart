@@ -25,13 +25,20 @@ class MaterialProvider extends ChangeNotifier {
   Map<String, List<MiniMaterial>> _popular;
   Map<String, List<MiniMaterial>> get popular => _popular;
 
-  List<MiniCompanyMaterial> _megazineList;
-  List<MiniCompanyMaterial> get megazinesList => _megazineList;
+  List<MiniCompanyMaterial> _magazineList;
+  List<MiniCompanyMaterial> get magazineList => _magazineList;
+
+  List<MiniCompanyMaterial> _newspaperList;
+  List<MiniCompanyMaterial> get newspaperList => _newspaperList;
+
+  List<MiniMaterial> _listOfCompanyMaterials;
+  List<MiniMaterial> get listOfCompanyMaterials => _listOfCompanyMaterials;
 
   LoadingState initialDataLoadingState = LoadingState.loading;
   LoadingState bookLoadingState = LoadingState.loading;
   LoadingState magazineLoadingState = LoadingState.loading;
   LoadingState newspapaerLoadingState = LoadingState.loading;
+  LoadingState materialListLoadingState = LoadingState.loading;
 
   void loadInitialData() {
     _api.getInitialData().then((Response response) {
@@ -39,7 +46,6 @@ class MaterialProvider extends ChangeNotifier {
 
       if (!body['success']) {
         initialDataLoadingState = LoadingState.failed;
-        print(body['message']);
         return notifyListeners();
       }
 
@@ -57,23 +63,40 @@ class MaterialProvider extends ChangeNotifier {
         _popular[genereId] = mini;
       });
 
-      _megazineList = List.from(body['data']['magazines']['providers'])
+      _magazineList = List.from(body['data']['magazines']['providers'])
           .map((json) => MiniCompanyMaterial.fromJSON(json))
           .toList();
 
-      //     List<MiniMaterial>.from(body['data']['megazines']['providers']);
-      // _newspaperList =
-      //     List<MiniMaterial>.from(body['data']['newspapers']['providers']);
-
-      print(_megazineList.length);
-      // print(_newspaperList.length);
-      // print(_megazineList);
-      // print(body['data']['newspapers']['providers']);
+      _newspaperList = List.from(body['data']['newspapers']['providers'])
+          .map((json) => MiniCompanyMaterial.fromJSON(json))
+          .toList();
 
       initialDataLoadingState = LoadingState.success;
       return notifyListeners();
     }).catchError((err) {
       initialDataLoadingState = LoadingState.failed;
+      print(err);
+      return notifyListeners();
+    });
+  }
+
+  void loadListOfCompanyMaterials(String materialId) {
+    _api.getMaterialsByProvider(materialId).then((Response response) {
+      final Map<String, dynamic> body = response.data;
+
+      if (!body['success']) {
+        materialListLoadingState = LoadingState.failed;
+        return notifyListeners();
+      }
+
+      _listOfCompanyMaterials = List.from(body['data']['materials'])
+          .map((json) => MiniMaterial.fromJSON(json))
+          .toList();
+
+      materialListLoadingState = LoadingState.success;
+      return notifyListeners();
+    }).catchError((err) {
+      materialListLoadingState = LoadingState.failed;
       print(err);
       return notifyListeners();
     });
