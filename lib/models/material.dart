@@ -3,6 +3,7 @@ import 'package:atrons_mobile/utils/api.dart';
 
 class MiniMaterial {
   String id, iD, type, title, subtitle, coverImgUrl, coverImgFileUrl;
+  int edition;
 
   MiniMaterial.fromJSON(Map<String, dynamic> json)
       : id = json['_id'],
@@ -11,7 +12,8 @@ class MiniMaterial {
         title = json['title'],
         subtitle = json['subtitle'],
         coverImgUrl = Api.baseUrl + json['cover_img_url'],
-        coverImgFileUrl = json['cover_img_file_url'];
+        coverImgFileUrl = json['cover_img_file_url'],
+        edition = json['edition'];
 }
 
 class MiniCompanyMaterial {
@@ -70,6 +72,7 @@ class MaterialDetail {
       'title': this.title,
       'subtitle': this.subtitle,
       'cover_img_url': this.coverImgUrl,
+      'edition': this.edition
     };
   }
 }
