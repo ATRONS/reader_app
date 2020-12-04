@@ -37,6 +37,7 @@ class _PurchaseState extends State<Purchase> {
                     child: Image.network(
                       material.coverImgUrl,
                       height: 200.0,
+                      width: 130.0,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -193,7 +194,7 @@ class _PurchaseState extends State<Purchase> {
               children: <Widget>[
                 Text("Total : "),
                 Text(
-                  "34 ETB",
+                  "${material.price['selling']} ETB",
                   style: TextStyle(fontSize: 24),
                 )
               ],
