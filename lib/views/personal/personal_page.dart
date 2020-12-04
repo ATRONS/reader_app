@@ -26,7 +26,7 @@ class _PersonalPageState extends State<PersonalPage> {
       {
         'icon': Feather.heart,
         'title': 'Favorites',
-        'function': () => _pushPage(RatePage()),
+        'function': () => _pushPage(Favorites()),
       },
       {
         'icon': Feather.heart,
