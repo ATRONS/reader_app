@@ -1,27 +1,44 @@
 import 'package:atrons_mobile/fragments/review_body.dart';
 import 'package:atrons_mobile/models/review.dart';
+import 'package:atrons_mobile/providers/detail_provider.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class RatePage extends StatelessWidget {
   final List<Review> comments;
   final Map<String, dynamic> lastrate;
+  final String materialId;
 
-  RatePage({@required this.comments, @required this.lastrate});
+  var mycomment = "";
+  var myratingvalue = 0;
+
+  RatePage(
+      {@required this.comments,
+      @required this.lastrate,
+      @required this.materialId});
 
   @override
   Widget build(BuildContext context) {
+    final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Rating"),
         actions: [
           Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text(
-                "POST",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+              child: InkWell(
+                onTap: () {
+                  detailProvider.setMaterialRating(
+                      myratingvalue, mycomment, materialId);
+                },
+                child: Text(
+                  "POST",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ))
         ],
@@ -33,10 +50,10 @@ class RatePage extends StatelessWidget {
             child: SmoothStarRating(
                 allowHalfRating: false,
                 onRated: (v) {
-                  // print(v);
+                  myratingvalue = v.toInt();
                 },
                 starCount: 5,
-                rating: 3,
+                rating: lastrate == null ? 0 : lastrate['value'].toDouble(),
                 size: 50.0,
                 isReadOnly: false,
                 filledIconData: Icons.star,
@@ -48,21 +65,20 @@ class RatePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: TextField(
+              maxLength: 200,
               decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green, width: 3.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green, width: 3.0),
-                ),
-                hintText: 'Describe your experience (optional)',
-              ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green, width: 3.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green, width: 3.0),
+                  ),
+                  hintText: 'Describe your experience (optional)'),
+              onChanged: (value) {
+                mycomment = value;
+              },
             ),
           ),
-          Container(
-              alignment: Alignment.bottomRight,
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              child: Text("200 max.")),
           addVerticalSpace(10),
           ListView.builder(
             shrinkWrap: true,

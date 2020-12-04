@@ -42,6 +42,11 @@ class Api {
     return _dio.get(url);
   }
 
+  Future<Response> rateMaterial(int value, String rating, String id) {
+    return _dio.put('$materialsUrl/$id/ratings',
+        data: {'value': value, 'description': rating});
+  }
+
   Future<Response> getMaterialDetail(String id) {
     final url = '$materialsUrl/$id';
     print('get material detail called');

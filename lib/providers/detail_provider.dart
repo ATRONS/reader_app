@@ -82,6 +82,22 @@ class DetailProvider extends ChangeNotifier {
     });
   }
 
+  void setMaterialRating(int value, String rating, String id) {
+    _api.rateMaterial(value, rating, id).then((Response res) async {
+      final Map<String, dynamic> body = res.data;
+
+      if (!body['success']) {
+        print(body['message']);
+        return notifyListeners();
+      }
+
+      return notifyListeners();
+    }).catchError((err) {
+      print(err);
+      return notifyListeners();
+    });
+  }
+
   void setLoadingState(LoadingState state) {
     _loadingState = state;
   }

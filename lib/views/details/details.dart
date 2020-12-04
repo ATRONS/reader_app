@@ -105,7 +105,7 @@ class _DetailsState extends State<Details> {
         DescriptionTextWidget(text: detail.synopsis),
         _buildTagsSection(detail.tags),
         _buildMoreBook(detail.moreFromAuthor),
-        _buildRateThis(detail.reviews, detail.readersLastRating),
+        _buildRateThis(detail.reviews, detail.readersLastRating, detail.id),
         _buildSectionReview(detail.reviews),
       ],
     );
@@ -412,7 +412,8 @@ class _DetailsState extends State<Details> {
           );
   }
 
-  _buildRateThis(List<Review> comments, Map<String, dynamic> myrating) {
+  _buildRateThis(
+      List<Review> comments, Map<String, dynamic> myrating, String id) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -420,21 +421,26 @@ class _DetailsState extends State<Details> {
         _buildSectionTitle('Rate this'),
         _buildDivider(),
         addVerticalSpace(10),
-        SmoothStarRating(
-            allowHalfRating: false,
-            onRated: (v) {
-              MyRouter.pushPage(
-                  context, RatePage(comments: comments, lastrate: myrating));
-            },
-            starCount: 5,
-            rating: myrating == null ? 0 : myrating['value'].toDouble(),
-            size: 40.0,
-            isReadOnly: false,
-            filledIconData: Icons.star,
-            halfFilledIconData: Icons.star_half,
-            color: Colors.green,
-            borderColor: Colors.green,
-            spacing: 0.0),
+        InkWell(
+          onTap: () {
+            MyRouter.pushPage(
+                context,
+                RatePage(
+                    comments: comments, lastrate: myrating, materialId: id));
+          },
+          child: SmoothStarRating(
+              allowHalfRating: false,
+              onRated: (v) {},
+              starCount: 5,
+              rating: myrating == null ? 0 : myrating['value'].toDouble(),
+              size: 40.0,
+              isReadOnly: true,
+              filledIconData: Icons.star,
+              halfFilledIconData: Icons.star_half,
+              color: Colors.green,
+              borderColor: Colors.green,
+              spacing: 0.0),
+        ),
       ],
     );
   }
