@@ -1,6 +1,7 @@
 import 'package:atrons_mobile/fragments/review_body.dart';
 import 'package:atrons_mobile/models/review.dart';
 import 'package:atrons_mobile/providers/detail_provider.dart';
+import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,9 @@ class RatePage extends StatelessWidget {
   RatePage(
       {@required this.comments,
       @required this.lastrate,
-      @required this.materialId});
+      @required this.materialId}) {
+    myratingvalue = lastrate['value'].toInt();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +37,32 @@ class RatePage extends StatelessWidget {
                   detailProvider.setMaterialRating(
                       myratingvalue, mycomment, materialId);
                 },
-                child: Text(
-                  "POST",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Selector<DetailProvider, LoadingState>(
+                    selector: (context, model) => model.loadingState,
+                    builder: (context, state, child) {
+                      return state == LoadingState.uninitialized
+                          ? Text(
+                              "POST",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : state == LoadingState.success
+                              ? Container(
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                  ),
+                                )
+                              : Container(
+                                  width: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.0,
+                                    valueColor:
+                                        AlwaysStoppedAnimation(Colors.blue),
+                                  ),
+                                );
+                    }),
               ))
         ],
       ),
