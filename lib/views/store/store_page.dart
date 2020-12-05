@@ -2,6 +2,8 @@ import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/providers/material_provider.dart';
+import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/search/search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../fragments/store_tabs.dart';
@@ -27,8 +29,6 @@ class _StorePageState extends State<StorePage>
     super.build(context);
     final provider = Provider.of<MaterialProvider>(context, listen: false);
 
-    // print(provider.magazineList.length);
-
     final tabs = <Widget>[Booktab(), NewsPaperTab(), MagazineTab()];
 
     return RefreshIndicator(
@@ -53,7 +53,7 @@ class _StorePageState extends State<StorePage>
   _buildSearchSection() {
     return GestureDetector(
       onTap: () {
-        print('segue to the search page');
+        MyRouter.pushPage(context, SearchPage());
       },
       child: Container(
         child: Padding(
