@@ -113,6 +113,19 @@ class MaterialProvider extends ChangeNotifier {
 
   void loadMagazines() {}
 
+  Future<List<MiniMaterial>> searchMaterial(String query) async {
+    try {
+      final response = await _api.searchMaterial(query);
+      final Map<String, dynamic> body = response.data;
+
+      return List.from(body['data']['materials'])
+          .map((json) => MiniMaterial.fromJSON(json))
+          .toList();
+    } catch (err) {
+      return [];
+    }
+  }
+
   Future<List<MiniMaterial>> getDownloadedMaterials() async {
     return await _downloadsDb.getAllMaterials();
   }

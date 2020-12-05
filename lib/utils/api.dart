@@ -42,6 +42,11 @@ class Api {
     return _dio.get(url);
   }
 
+  Future<Response> searchMaterial(String query) {
+    final url = '$materialsUrl?search=$query';
+    return _dio.get(url);
+  }
+
   Future<Response> rateMaterial(int value, String rating, String id) {
     return _dio.put('$materialsUrl/$id/ratings',
         data: {'value': value, 'description': rating});
