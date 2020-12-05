@@ -84,9 +84,10 @@ class _DetailsState extends State<Details> {
                   );
                 }
 
-                final detail =
-                    Provider.of<DetailProvider>(context, listen: false)
-                        .selectedMaterial;
+                final detailProvider =
+                    Provider.of<DetailProvider>(context, listen: false);
+                final detail = detailProvider.selectedMaterial;
+
                 return _buildDetailView(detail);
               })),
     );
