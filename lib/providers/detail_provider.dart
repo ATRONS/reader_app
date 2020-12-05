@@ -5,6 +5,8 @@ import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/providers/shelf_provider.dart';
 import 'package:atrons_mobile/utils/api.dart';
 import 'package:atrons_mobile/utils/file_helper.dart';
+import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/details/details.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +23,8 @@ class DetailProvider extends ChangeNotifier {
   MaterialDetail get selectedMaterial => _selectedMaterial;
   LoadingState _loadingState = LoadingState.loading;
   LoadingState get loadingState => _loadingState;
+
+  LoadingState setRatingState = LoadingState.uninitialized;
 
   bool _isDownloaded = false;
   bool get isDownloaded => _isDownloaded;
@@ -83,17 +87,24 @@ class DetailProvider extends ChangeNotifier {
   }
 
   void setMaterialRating(int value, String rating, String id) {
+    _loadingState = LoadingState.uninitialized;
     _api.rateMaterial(value, rating, id).then((Response res) async {
       final Map<String, dynamic> body = res.data;
 
       if (!body['success']) {
         print(body['message']);
+        _loadingState = LoadingState.failed;
         return notifyListeners();
       }
-
+      _loadingState = LoadingState.success;
+      _selectedMaterial.readersLastRating = {
+        "value": value,
+        "description": rating
+      };
       return notifyListeners();
     }).catchError((err) {
       print(err);
+      _loadingState = LoadingState.failed;
       return notifyListeners();
     });
   }
@@ -102,7 +113,15 @@ class DetailProvider extends ChangeNotifier {
     _loadingState = state;
   }
 
+  void setRatingStateMethod(LoadingState state) {
+    setRatingState = state;
+  }
+
   void setIsDownloaded(bool downloaded) {
     _isDownloaded = downloaded;
+  }
+
+  void setReadersLastRating(Map<String, dynamic> rating) {
+    _selectedMaterial.readersLastRating = rating;
   }
 }
