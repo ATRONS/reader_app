@@ -5,8 +5,6 @@ import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/providers/shelf_provider.dart';
 import 'package:atrons_mobile/utils/api.dart';
 import 'package:atrons_mobile/utils/file_helper.dart';
-import 'package:atrons_mobile/utils/router.dart';
-import 'package:atrons_mobile/views/details/details.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
