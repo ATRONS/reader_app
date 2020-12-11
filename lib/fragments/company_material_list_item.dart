@@ -1,30 +1,23 @@
+import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/companyMaterials/company_material_view.dart';
 import 'package:flutter/material.dart';
 
-class MegazineListItem extends StatelessWidget {
-  final String title;
-  final String edition;
-  final String desc;
+class CompanyMaterialListItem extends StatelessWidget {
+  final MiniCompanyMaterial materialItem;
 
-  MegazineListItem(
-      {Key key,
-      @required this.title,
-      @required this.edition,
-      @required this.desc})
-      : super(key: key);
+  CompanyMaterialListItem({
+    Key key,
+    @required this.materialItem,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
-      // MyRouter.pushPage(
-      //   context,
-      //   Details(
-      //     entry: entry,
-      //     imgTag: imgTag,
-      //     titleTag: titleTag,
-      //     authorTag: authorTag,
-      //   ),
-      // );
+      onTap: () {
+        MyRouter.pushPage(context,
+            CompanyMaterialView(materialItem.id, materialItem.displayName));
+      },
       child: Container(
         height: 150.0,
         child: Row(
@@ -42,8 +35,8 @@ class MegazineListItem extends StatelessWidget {
                 borderRadius: BorderRadius.all(
                   Radius.circular(10.0),
                 ),
-                child: Image.asset(
-                  'assets/images/kumneger.jpg',
+                child: Image.network(
+                  materialItem.avatarUrl,
                   fit: BoxFit.cover,
                   height: 150.0,
                   width: 100.0,
@@ -60,7 +53,7 @@ class MegazineListItem extends StatelessWidget {
                   Material(
                     type: MaterialType.transparency,
                     child: Text(
-                      'Kumneger',
+                      materialItem.displayName,
                       style: TextStyle(
                         fontSize: 17.0,
                         fontWeight: FontWeight.bold,
@@ -76,7 +69,7 @@ class MegazineListItem extends StatelessWidget {
                   Material(
                     type: MaterialType.transparency,
                     child: Text(
-                      'Edition 123',
+                      materialItem.legalName,
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w800,
@@ -86,7 +79,7 @@ class MegazineListItem extends StatelessWidget {
                   ),
                   SizedBox(height: 10.0),
                   Text(
-                    '${desc.length < 100 ? desc : desc.substring(0, 100)}...'
+                    '${materialItem.about.length < 100 ? materialItem.about : materialItem.about.substring(0, 100)}...'
                         .replaceAll(r'\n', '\n')
                         .replaceAll(r'\r', '')
                         .replaceAll(r'\"', '"'),

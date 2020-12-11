@@ -1,38 +1,55 @@
+import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:flutter/material.dart';
-// import './loading.dart';
-// import 'package:flutter_ebook_app/models/category.dart';
-// import 'package:flutter_ebook_app/util/router.dart';
-// import 'package:uuid/uuid.dart';
-
-// import '../views/details/details.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class MaterialReview extends StatelessWidget {
-//   final String img;
-  final String username;
+  final String firstname;
+  final String lastname;
   final String comment;
-//   final Entry entry;
+  final int stars;
 
   MaterialReview({
     Key key,
-    @required this.username,
+    @required this.firstname,
+    @required this.lastname,
     @required this.comment,
+    @required this.stars,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(
-          "@$username - ",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          child: Text(
+            firstname + " " + lastname,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
         ),
-        Expanded(
-            child: Text(
-          " $comment",
-          style: TextStyle(fontSize: 13),
-        ))
+        addVerticalSpace(10),
+        SmoothStarRating(
+            allowHalfRating: false,
+            onRated: (v) {},
+            starCount: 5,
+            rating: stars.toDouble(),
+            size: 20.0,
+            isReadOnly: true,
+            filledIconData: Icons.star,
+            halfFilledIconData: Icons.star_half,
+            color: Colors.green,
+            borderColor: Colors.green,
+            spacing: 0.0),
+        addVerticalSpace(5),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          child: Text(
+            comment,
+            style: TextStyle(fontSize: 13),
+          ),
+        ),
+        addVerticalSpace(10)
       ],
     );
   }

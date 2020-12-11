@@ -2,11 +2,11 @@ import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/providers/material_provider.dart';
+import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/search/search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../fragments/book_tab.dart';
-import '../../fragments/book_list_item.dart';
-import '../../fragments/megazine_list_item.dart';
+import '../../fragments/store_tabs.dart';
 
 class StorePage extends StatefulWidget {
   @override
@@ -29,7 +29,7 @@ class _StorePageState extends State<StorePage>
     super.build(context);
     final provider = Provider.of<MaterialProvider>(context, listen: false);
 
-    final tabs = <Widget>[Booktab(), _buildNewsPaperTab(), _buildMegazineTab()];
+    final tabs = <Widget>[Booktab(), NewsPaperTab(), MagazineTab()];
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -53,7 +53,7 @@ class _StorePageState extends State<StorePage>
   _buildSearchSection() {
     return GestureDetector(
       onTap: () {
-        print('segue to the search page');
+        MyRouter.pushPage(context, SearchPage());
       },
       child: Container(
         child: Padding(
@@ -118,49 +118,6 @@ class _StorePageState extends State<StorePage>
         ),
       ),
     );
-  }
-
-  _buildNewsPaperTab() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: 3,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
-            child: BookListItem(
-              title: 'entry.title.t',
-              author: 'entry.author.name.t',
-              desc:
-                  'this book nd and the describes about thee war on the 2nd and th',
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  _buildMegazineTab() {
-    return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: 3,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.0),
-              child: MegazineListItem(
-                title: 'entry.title.t',
-                edition: 'entry.author.name.t',
-                desc:
-                    'this the megazine describes about  megazine describes about thee on the 2nd and the  describes about thee on the 2nd and the',
-              ),
-            );
-          },
-        ));
   }
 
   @override

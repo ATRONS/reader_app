@@ -21,6 +21,7 @@ dependencies:
   permission_handler: ^4.2.0+hotfix.1
   path_provider: ^1.6.24
   pointycastle: ^2.0.0
+  smooth_star_rating: ^1.1.1
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,11 @@
 import 'package:atrons_mobile/models/genere.dart';
+import 'package:atrons_mobile/models/review.dart';
 import 'package:atrons_mobile/utils/api.dart';
 
 class MiniMaterial {
   String id, iD, type, title, subtitle, coverImgUrl, coverImgFileUrl;
+  Map<String, dynamic> provider;
+  int edition;
 
   MiniMaterial.fromJSON(Map<String, dynamic> json)
       : id = json['_id'],
@@ -11,25 +14,32 @@ class MiniMaterial {
         title = json['title'],
         subtitle = json['subtitle'],
         coverImgUrl = Api.baseUrl + json['cover_img_url'],
-        coverImgFileUrl = json['cover_img_file_url'];
+        coverImgFileUrl = json['cover_img_file_url'],
+        edition = json['edition'],
+        provider = json['provider'];
+}
+
+class MiniCompanyMaterial {
+  String id, about, legalName, displayName, avatarUrl;
+
+  MiniCompanyMaterial.fromJSON(Map<String, dynamic> json)
+      : id = json['_id'],
+        about = json['about'],
+        legalName = json['legal_name'],
+        displayName = json['display_name'],
+        avatarUrl = Api.baseUrl + json['avatar_url'];
 }
 
 class MaterialDetail {
-  String id,
-      type,
-      title,
-      subtitle,
-      coverImgUrl,
-      displayDate,
-      isbn,
-      synopsis,
-      review;
+  String id, type, title, subtitle, coverImgUrl, displayDate, isbn, synopsis;
 
   int pages, edition;
 
-  Map<String, dynamic> file, provider, price, rating;
+  Map<String, dynamic> file, provider, price, rating, readersLastRating;
 
   List<Genere> tags;
+  List<Review> reviews;
+  List<MiniMaterial> moreFromAuthor;
 
   MaterialDetail.fromJSON(Map<String, dynamic> json)
       : id = json['_id'],
@@ -40,7 +50,7 @@ class MaterialDetail {
         displayDate = json['display_date'],
         isbn = json['ISBN'],
         synopsis = json['synopsis'],
-        review = json['review'],
+        // review = json['review'],
         pages = json['pages'],
         edition = json['edition'],
         file = json['file'],
@@ -49,7 +59,15 @@ class MaterialDetail {
         rating = json['rating'],
         tags = List<dynamic>.from(json['tags'])
             .map((each) => Genere.fromJSON(each))
-            .toList();
+            .toList(),
+        reviews = List<dynamic>.from(json['material_ratings']['ratings'])
+            .map((review) => Review.fromJSON(review))
+            .toList(),
+        moreFromAuthor =
+            List<dynamic>.from(json['more_from_provider']['materials'])
+                .map((morematerial) => MiniMaterial.fromJSON(morematerial))
+                .toList(),
+        readersLastRating = json['readers_last_rating'];
 
   Map<String, dynamic> toMiniJSON() {
     return {
@@ -59,6 +77,8 @@ class MaterialDetail {
       'title': this.title,
       'subtitle': this.subtitle,
       'cover_img_url': this.coverImgUrl,
+      'edition': this.edition,
+      'provider': this.provider
     };
   }
 }

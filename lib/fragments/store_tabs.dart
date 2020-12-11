@@ -1,3 +1,5 @@
+import 'package:atrons_mobile/fragments/book_list_item.dart';
+import 'package:atrons_mobile/fragments/company_material_list_item.dart';
 import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/utils/constants.dart';
@@ -7,7 +9,7 @@ import 'package:atrons_mobile/utils/styles.dart';
 import 'package:atrons_mobile/views/genres/listOfGenre.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './book_card.dart';
+import 'book_card.dart';
 import '../theme/app_theme.dart';
 import '../utils/router.dart';
 import '../utils/helper_funcs.dart';
@@ -235,6 +237,105 @@ class _BooktabState extends State<Booktab> {
           },
         ),
       ),
+    );
+  }
+}
+
+class NewsPaperTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<MaterialProvider>(context, listen: false);
+
+    return Selector<MaterialProvider, LoadingState>(
+      selector: (context, model) => model.initialDataLoadingState,
+      builder: (context, state, child) {
+        if (state == LoadingState.loading) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (state == LoadingState.failed) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(Constants.loadingFailed),
+                FlatButton(
+                  onPressed: () {
+                    provider.setInitialDataState(LoadingState.failed);
+                    provider.loadInitialData();
+                  },
+                  child: Text(Constants.retry),
+                ),
+              ],
+            ),
+          );
+        }
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: ListView.builder(
+            shrinkWrap: true,
+            // physics: NeverScrollableScrollPhysics(),
+            itemCount: provider.newspaperList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+                child: CompanyMaterialListItem(
+                  materialItem: provider.newspaperList[index],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class MagazineTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<MaterialProvider>(context, listen: false);
+
+    return Selector<MaterialProvider, LoadingState>(
+      selector: (context, model) => model.initialDataLoadingState,
+      builder: (context, state, child) {
+        if (state == LoadingState.loading) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (state == LoadingState.failed) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(Constants.loadingFailed),
+                FlatButton(
+                  onPressed: () {
+                    provider.setInitialDataState(LoadingState.failed);
+                    provider.loadInitialData();
+                  },
+                  child: Text(Constants.retry),
+                ),
+              ],
+            ),
+          );
+        }
+        return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: ListView.builder(
+              shrinkWrap: true,
+              // physics: NeverScrollableScrollPhysics(),
+              itemCount: provider.magazineList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5.0),
+                  child: CompanyMaterialListItem(
+                    materialItem: provider.magazineList[index],
+                  ),
+                );
+              },
+            ));
+      },
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:atrons_mobile/fragments/rate_material.dart';
 import 'package:atrons_mobile/providers/user_provider.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:atrons_mobile/views/purchase/purchase.dart';

@@ -1,13 +1,18 @@
+import 'package:atrons_mobile/fragments/rate_material.dart';
+import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/models/material.dart';
+import 'package:atrons_mobile/models/review.dart';
 import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/file_helper.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
+import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/utils/styles.dart';
 import 'package:atrons_mobile/providers/detail_provider.dart';
 import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/providers/material_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import '../../fragments/book_list_item.dart';
 import '../../fragments/descriptionTextWidget.dart';
 import '../../fragments/review_body.dart';
@@ -42,6 +47,7 @@ class _DetailsState extends State<Details> {
         final provider = Provider.of<DetailProvider>(context, listen: false);
         provider.setLoadingState(LoadingState.failed);
         provider.setIsDownloaded(false);
+
         return true;
       },
       child: Scaffold(
@@ -77,9 +83,10 @@ class _DetailsState extends State<Details> {
                   );
                 }
 
-                final detail =
-                    Provider.of<DetailProvider>(context, listen: false)
-                        .selectedMaterial;
+                final detailProvider =
+                    Provider.of<DetailProvider>(context, listen: false);
+                final detail = detailProvider.selectedMaterial;
+
                 return _buildDetailView(detail);
               })),
     );
@@ -96,20 +103,10 @@ class _DetailsState extends State<Details> {
         _buildDivider(),
         addVerticalSpace(10),
         DescriptionTextWidget(text: detail.synopsis),
-        addVerticalSpace(30),
-        _buildSectionTitle('Tags'),
-        addVerticalSpace(10),
-        _buildTagsSection(),
-        addVerticalSpace(30),
-        _buildSectionTitleWithMore('More from Author'),
-        _buildDivider(),
-        addVerticalSpace(10),
-        _buildMoreBook(),
-        addVerticalSpace(30),
-        _buildSectionTitleWithMore('Reviews'),
-        _buildDivider(),
-        addVerticalSpace(10),
-        _buildSectionReview(),
+        _buildTagsSection(detail.tags),
+        _buildMoreBook(detail.moreFromAuthor),
+        _buildRateThis(detail.reviews, detail.readersLastRating, detail.id),
+        _buildSectionReview(detail.reviews),
       ],
     );
   }
@@ -128,11 +125,16 @@ class _DetailsState extends State<Details> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Image.network(
-            detail.coverImgUrl,
-            fit: BoxFit.cover,
-            height: 200.0,
-            width: 130.0,
+          ClipRRect(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10.0),
+            ),
+            child: Image.network(
+              detail.coverImgUrl,
+              fit: BoxFit.cover,
+              height: 200.0,
+              width: 130.0,
+            ),
           ),
           SizedBox(width: 20.0),
           Flexible(
@@ -318,88 +320,156 @@ class _DetailsState extends State<Details> {
     );
   }
 
-  _buildTagsSection() {
-    return Container(
-      height: 50.0,
-      child: Center(
-        child: ListView.builder(
-          primary: false,
-          padding: EdgeInsets.symmetric(horizontal: 15.0),
-          scrollDirection: Axis.horizontal,
-          itemCount: 5,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            // Link link = homeProvider.top.feed.link[index];
-
-            // We don't need the tags from 0-9 because
-            // they are not categories
-
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5.0),
-                  ),
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20.0),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        'fiction',
-                        style: TextStyle(
-                          color: Colors.white,
+  _buildTagsSection(List<Genere> taglist) {
+    return taglist.length == 0
+        ? Container()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              addVerticalSpace(30),
+              _buildSectionTitle('Tags'),
+              addVerticalSpace(10),
+              Container(
+                height: 50.0,
+                child: ListView.builder(
+                  primary: false,
+                  padding: EdgeInsets.symmetric(horizontal: 15.0),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: taglist.length,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).accentColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                        ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20.0),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(
+                                taglist[index].name,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
+            ],
+          );
+  }
+
+  _buildMoreBook(List<MiniMaterial> morefromprovider) {
+    final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+    return morefromprovider.length == 0
+        ? Container()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              addVerticalSpace(30),
+              _buildSectionTitleWithMore('More from Author'),
+              _buildDivider(),
+              addVerticalSpace(10),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: morefromprovider.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final morematerial = morefromprovider[index];
+                  return InkWell(
+                    onTap: () {
+                      MyRouter.pushPage(
+                          context, Details(id: morefromprovider[index].id));
+                      detailProvider.setLoadingState(LoadingState.loading);
+                      detailProvider.setIsDownloaded(false);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                      child: BookListItem(
+                        title: morematerial.title,
+                        author: morematerial.provider['display_name'],
+                        desc:
+                            'this book describes about thee war on the 2nd and the',
+                        coverImg: morematerial.coverImgUrl,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+  }
+
+  _buildRateThis(
+      List<Review> comments, Map<String, dynamic> myrating, String id) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        addVerticalSpace(30),
+        _buildSectionTitle('Rate this'),
+        _buildDivider(),
+        addVerticalSpace(10),
+        InkWell(
+          onTap: () {
+            MyRouter.pushPage(
+                context,
+                RatePage(
+                    comments: comments, lastrate: myrating, materialId: id));
+          },
+          child: SmoothStarRating(
+              allowHalfRating: false,
+              onRated: (v) {},
+              starCount: 5,
+              rating: myrating == null ? 0 : myrating['value'].toDouble(),
+              size: 40.0,
+              isReadOnly: true,
+              filledIconData: Icons.star,
+              halfFilledIconData: Icons.star_half,
+              color: Colors.green,
+              borderColor: Colors.green,
+              spacing: 0.0),
+        ),
+      ],
+    );
+  }
+
+  _buildSectionReview(List<Review> comments) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        addVerticalSpace(30),
+        _buildSectionTitleWithMore('Reviews'),
+        _buildDivider(),
+        addVerticalSpace(10),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: comments.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 5.0),
+              child: MaterialReview(
+                  firstname: comments[index].username['firstname'],
+                  lastname: comments[index].username['lastname'],
+                  comment: comments[index].comment,
+                  stars: comments[index].starvalue),
             );
           },
         ),
-      ),
-    );
-  }
-
-  _buildMoreBook() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: 2,
-      itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: 5.0),
-          child: BookListItem(
-            title: 'entry.title.t',
-            author: 'entry.author.name.t',
-            desc: 'this book describes about thee war on the 2nd and the',
-          ),
-        );
-      },
-    );
-  }
-
-  _buildSectionReview() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: 2,
-      itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: EdgeInsets.symmetric(vertical: 5.0),
-          child: MaterialReview(
-            username: "mek_user",
-            comment:
-                "great book. every single person should read this. a step forward to the future before everyone else ..",
-          ),
-        );
-      },
+      ],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 
 class Api {
   static final Dio _dio = Dio();
+  // 192.168.43.240
   static String baseUrl = 'http://192.168.43.113:5000/api/v1';
   static String readerBaseUrl = baseUrl + '/reader';
   static String mediaBaseUrl = baseUrl + '/media';
@@ -26,14 +27,29 @@ class Api {
     return _dio.get(initialDataUrl);
   }
 
-  Future<Response> getMaterials(String type) {
+  Future<Response> getMaterialsByType(String type) {
     final url = '$materialsUrl?type=$type';
+    return _dio.get(url);
+  }
+
+  Future<Response> getMaterialsByProvider(String providerId) {
+    final url = '$materialsUrl?provider=$providerId';
     return _dio.get(url);
   }
 
   Future<Response> getProviders(String provides) {
     final url = '$providersUrl?provides=$provides';
     return _dio.get(url);
+  }
+
+  Future<Response> searchMaterial(String query) {
+    final url = '$materialsUrl?search=$query';
+    return _dio.get(url);
+  }
+
+  Future<Response> rateMaterial(int value, String rating, String id) {
+    return _dio.put('$materialsUrl/$id/ratings',
+        data: {'value': value, 'description': rating});
   }
 
   Future<Response> getMaterialDetail(String id) {
