@@ -2,12 +2,10 @@ import 'package:atrons_mobile/models/material.dart';
 import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/utils/file_helper.dart';
 import 'package:atrons_mobile/utils/helper_funcs.dart';
-import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/utils/styles.dart';
 import 'package:atrons_mobile/providers/detail_provider.dart';
 import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/providers/material_provider.dart';
-import 'package:atrons_mobile/views/purchase/purchase.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../fragments/book_list_item.dart';
@@ -246,7 +244,8 @@ class _DetailsState extends State<Details> {
 
                         final downloadBtn = FlatButton(
                           onPressed: () {
-                            MyRouter.pushPage(context, Purchase());
+                            detailProvider.downloadFile(context);
+                            // MyRouter.pushPage(context, Purchase());
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
