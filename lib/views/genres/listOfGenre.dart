@@ -33,7 +33,7 @@ class ListOfGenre extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               onTap: () {},
-              title: Text(generes[index].getGenereName(GenereLang.amharic)),
+              title: Text(generes[index].getGenereName(GenereLang.english)),
             );
           },
           separatorBuilder: (BuildContext context, int index) {
