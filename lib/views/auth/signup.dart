@@ -153,9 +153,6 @@ class _SignupPageState extends State<SignupPage> {
   Widget _buildButtons(UserProvider provider) {
     return Selector<UserProvider, AuthenticationState>(
       builder: (context, data, child) {
-        if (data == AuthenticationState.authenticating) {
-          return CircularProgressIndicator();
-        }
         return InkWell(
           onTap: () {
             provider.signupUser({
@@ -169,14 +166,31 @@ class _SignupPageState extends State<SignupPage> {
             height: 50,
             margin: EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Theme.of(context).accentColor,
-            ),
+                borderRadius: BorderRadius.circular(5),
+                color: Theme.of(context).accentColor),
             child: Center(
-              child: Text(
-                "Sign up",
-                style: TextStyle(color: Colors.white),
-              ),
+              child: data == AuthenticationState.authenticating
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Center(
+                          child: Container(
+                            height: 20,
+                            width: 20,
+                            margin: EdgeInsets.all(5),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation(Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      "Sign up",
+                      style: TextStyle(color: Colors.white),
+                    ),
             ),
           ),
         );
