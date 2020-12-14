@@ -16,6 +16,7 @@ class Api {
   static String signupUrl = readerBaseUrl + '/signup';
   static String loginUrl = readerBaseUrl + '/login';
   static String logoutUrl = readerBaseUrl + '/logout';
+  static String verifyUrl = readerBaseUrl + '/verifyEmail';
 
   static setAuthToken(String token) {
     _dio.options.headers['content-Type'] = 'application/json';
@@ -68,6 +69,10 @@ class Api {
 
   Future<Response> logoutReader() {
     return _dio.post('$logoutUrl');
+  }
+
+  Future<Response> verifyEmail(String otp) {
+    return _dio.put(verifyUrl, data: {"otp": otp});
   }
 
   void download(MaterialDetail material, Function onProgress, Function onFinish,
