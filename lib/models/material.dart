@@ -3,7 +3,14 @@ import 'package:atrons_mobile/models/review.dart';
 import 'package:atrons_mobile/utils/api.dart';
 
 class MiniMaterial {
-  String id, iD, type, title, subtitle, coverImgUrl, coverImgFileUrl;
+  String id,
+      iD,
+      type,
+      title,
+      subtitle,
+      coverImgUrl,
+      coverImgFileUrl,
+      publishedDate;
   Map<String, dynamic> provider;
   int edition;
 
@@ -16,6 +23,7 @@ class MiniMaterial {
         coverImgUrl = Api.baseUrl + json['cover_img_url'],
         coverImgFileUrl = json['cover_img_file_url'],
         edition = json['edition'],
+        publishedDate = json['published_date'],
         provider = json['provider'];
 }
 
@@ -31,7 +39,15 @@ class MiniCompanyMaterial {
 }
 
 class MaterialDetail {
-  String id, type, title, subtitle, coverImgUrl, displayDate, isbn, synopsis;
+  String id,
+      type,
+      title,
+      subtitle,
+      coverImgUrl,
+      displayDate,
+      isbn,
+      synopsis,
+      publishedDate;
 
   int pages, edition;
 
@@ -55,6 +71,7 @@ class MaterialDetail {
         edition = json['edition'],
         file = json['file'],
         provider = json['provider'],
+        publishedDate = json['published_date'],
         price = json['price'],
         rating = json['rating'],
         tags = List<dynamic>.from(json['tags'])
@@ -78,7 +95,8 @@ class MaterialDetail {
       'subtitle': this.subtitle,
       'cover_img_url': this.coverImgUrl,
       'edition': this.edition,
-      'provider': this.provider
+      'provider': this.provider,
+      'published_date': this.publishedDate
     };
   }
 }
