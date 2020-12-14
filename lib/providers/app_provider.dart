@@ -8,6 +8,7 @@ class AppState {
   static const FIRST_TIME_OPENED = 'first_time_opened';
   static const LOGGED_OUT = 'user_logged_out';
   static const LOGGED_IN = 'user_logged_in';
+  static const ON_VERIFICATION_PAGE = 'on_verification_page';
 }
 
 class AppProvider extends ChangeNotifier {
