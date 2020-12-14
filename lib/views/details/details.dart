@@ -341,6 +341,7 @@ class _DetailsState extends State<Details> {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 3),
                         decoration: BoxDecoration(
                           color: Theme.of(context).accentColor,
                           borderRadius: BorderRadius.all(
@@ -401,8 +402,9 @@ class _DetailsState extends State<Details> {
                       child: BookListItem(
                         title: morematerial.title,
                         author: morematerial.provider['display_name'],
-                        desc:
-                            'this book describes about thee war on the 2nd and the',
+                        desc: morematerial.type == "BOOK"
+                            ? 'published on ${formatIsoDate(morematerial.publishedDate)}'
+                            : '${morematerial.edition}th edition',
                         coverImg: morematerial.coverImgUrl,
                       ),
                     ),
