@@ -15,4 +15,5 @@ class Constants {
   static String open = 'Open';
   static String alreadyHaveAnAccount = 'Already have an Account ? Log in';
   static String dontHaveAnAccount = 'Dont have an Account yet ? Sign up';
+  static String resendVerification = 'Resend verification code';
 }
