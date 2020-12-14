@@ -115,12 +115,14 @@ class MaterialProvider extends ChangeNotifier {
 
   Future<List<MiniMaterial>> searchMaterial(String query, bool typebook,
       bool typemagazine, bool typenewspaper) async {
-    final String filterbook = typebook ? "BOOK" : "";
-    final String filternewspaper = typenewspaper ? "NEWSPAPER" : "";
+    final String filterbook = typebook ? "BOOK|" : "";
+    final String filternewspaper = typenewspaper ? "NEWSPAPER|" : "";
     final String filtermagazine = typemagazine ? "MAGAZINE" : "";
 
+    final String querytype = filterbook + filternewspaper + filtermagazine;
+
     try {
-      final response = await _api.searchMaterial(query);
+      final response = await _api.searchMaterial(query, querytype);
       final Map<String, dynamic> body = response.data;
 
       return List.from(body['data']['materials'])
