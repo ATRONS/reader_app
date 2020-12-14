@@ -5,6 +5,7 @@ import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:atrons_mobile/views/auth/signup.dart';
 import 'package:atrons_mobile/views/home_screen.dart';
+import 'package:atrons_mobile/views/verification/verification_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,11 @@ class _SplashState extends State<SplashScreen> {
     switch (state) {
       case AppState.FIRST_TIME_OPENED:
         MyRouter.pushPageReplacement(context, SignupPage());
+        break;
+      case AppState.ON_VERIFICATION_PAGE:
+        await userProvider.fetchUserInfo();
+        Api.setAuthToken(userProvider.user.token);
+        MyRouter.pushPageReplacement(context, VerificationPage());
         break;
       case AppState.LOGGED_IN:
         await userProvider.fetchUserInfo();
