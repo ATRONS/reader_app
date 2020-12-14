@@ -5,6 +5,7 @@ import 'package:atrons_mobile/utils/api.dart';
 import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:atrons_mobile/views/home_screen.dart';
+import 'package:atrons_mobile/views/verification/verification_page.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,9 @@ class UserProvider extends ChangeNotifier {
 
       await _createUser(context, body['data']);
       signupStatus = AuthenticationState.success;
-      MyRouter.pushPageReplacement(context, HomeScreen());
+      final appProvider = Provider.of<AppProvider>(context, listen: false);
+      await appProvider.setAppState(AppState.ON_VERIFICATION_PAGE);
+      MyRouter.pushPageReplacement(context, VerificationPage());
     }).catchError((err) {
       print(err);
       signupStatus = AuthenticationState.failed;
@@ -57,6 +60,8 @@ class UserProvider extends ChangeNotifier {
 
       await _createUser(context, body['data']);
       loginStatus = AuthenticationState.success;
+      final appStateProvider = Provider.of<AppProvider>(context, listen: false);
+      await appStateProvider.setAppState(AppState.LOGGED_IN);
       MyRouter.pushPageReplacement(context, HomeScreen());
     }).catchError((err) {
       print(err);
@@ -73,13 +78,20 @@ class UserProvider extends ChangeNotifier {
     MyRouter.pushPageReplacement(ctx, LoginPage());
   }
 
+  Future<bool> verifyUser(String otp) async {
+    try {
+      await _api.verifyEmail(otp);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
   _createUser(BuildContext context, dynamic data) async {
     _user = User.fromJSON(data['user_info']);
     _user.token = data['token'];
     Api.setAuthToken(_user.token);
 
-    final appStateProvider = Provider.of<AppProvider>(context, listen: false);
     await _readersDB.addUser(_user.toUserJSON());
-    await appStateProvider.setAppState(AppState.LOGGED_IN);
   }
 }
