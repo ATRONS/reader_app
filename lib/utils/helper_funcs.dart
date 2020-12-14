@@ -24,3 +24,11 @@ Widget addHorizontalSpace(double width) {
 Widget addDivider(Color color) {
   return Divider(color: color);
 }
+
+String formatIsoDate(String date) {
+  final dd = DateTime.parse(date).day;
+  final mm = DateTime.parse(date).month;
+  final yyyy = DateTime.parse(date).year;
+
+  return dd.toString() + "/" + mm.toString() + "/" + yyyy.toString();
+}
