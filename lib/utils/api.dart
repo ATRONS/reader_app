@@ -42,8 +42,8 @@ class Api {
     return _dio.get(url);
   }
 
-  Future<Response> searchMaterial(String query) {
-    final url = '$materialsUrl?search=$query';
+  Future<Response> searchMaterial(String query, String querytype) {
+    final url = '$materialsUrl?search=$query&type=$querytype';
     return _dio.get(url);
   }
 
