@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 class Api {
   static final Dio _dio = Dio();
   // 192.168.43.240
-  static String baseUrl = 'http://192.168.43.113:5000/api/v1';
+  static String baseUrl = 'http://192.168.43.186:5000/api/v1';
   static String readerBaseUrl = baseUrl + '/reader';
   static String mediaBaseUrl = baseUrl + '/media';
 

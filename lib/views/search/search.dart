@@ -12,6 +12,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<MiniMaterial> searchResult = [];
+  bool typebook = false, typemagazine = false, typenewspaper = false;
 
   @override
   void dispose() {
@@ -32,13 +33,22 @@ class _SearchPageState extends State<SearchPage> {
             if (value.length > 2) {
               final incomingSearchResult =
                   await Provider.of<MaterialProvider>(context, listen: false)
-                      .searchMaterial(value);
+                      .searchMaterial(
+                          value, typebook, typemagazine, typenewspaper);
               setState(() {
                 searchResult = incomingSearchResult;
               });
             }
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.tune),
+            onPressed: () {
+              MyRouter.pushPageDialog(context, _buildSortItems(context));
+            },
+          )
+        ],
       ),
       body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -57,6 +67,9 @@ class _SearchPageState extends State<SearchPage> {
                     searchResult[index].coverImgUrl,
                   ),
                 ),
+                subtitle: searchResult[index].type == "BOOK"
+                    ? Text("")
+                    : Text('${searchResult[index].edition}th edition'),
                 title: Text(searchResult[index].title),
                 trailing: Text(searchResult[index].type),
               );
@@ -66,5 +79,59 @@ class _SearchPageState extends State<SearchPage> {
             },
           )),
     );
+  }
+
+  _buildSortItems(BuildContext context) {
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text("Filter"),
+              content: Container(
+                  height: 180,
+                  child: ListView(
+                    children: [
+                      CheckboxListTile(
+                        title: Text("Book"),
+                        value: typebook,
+                        onChanged: (newValue) {
+                          setState(() {
+                            typebook = newValue;
+                          });
+                        },
+                      ),
+                      CheckboxListTile(
+                        title: Text("Newspaper"),
+                        value: typenewspaper,
+                        onChanged: (newValue) {
+                          setState(() {
+                            typenewspaper = newValue;
+                          });
+                        },
+                      ),
+                      CheckboxListTile(
+                        title: Text("Magazine"),
+                        value: typemagazine,
+                        onChanged: (newValue) {
+                          setState(() {
+                            typemagazine = newValue;
+                          });
+                        },
+                      ),
+                    ],
+                  )),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Close'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+        });
   }
 }
