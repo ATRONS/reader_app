@@ -88,39 +88,63 @@ class _ShelfPageState extends State<ShelfPage> {
   }
 
   _buildBodyList(List<MiniMaterial> shelfitems) {
-    return GridView.builder(
-      physics: new NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
-      shrinkWrap: true,
-      itemCount: shelfitems.length + 1,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 200 / 340,
+    return Column(children: <Widget>[
+      Container(
+        // color: Colors.grey.shade100,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: Text(
+          "ATRONS",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w700),
+        ),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade200,
+              spreadRadius: 7,
+              blurRadius: 15,
+              offset: Offset(0, 0),
+              // changes position of shadow
+            ),
+          ],
+        ),
       ),
-      itemBuilder: (BuildContext context, int index) {
-        if (index == shelfitems.length) {
-          return InkWell(
-            onTap: () {
-              widget.navigateToStore(1);
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
-              child: Icon(
-                Icons.add,
-                color: Colors.grey,
-                size: 100.0,
+      GridView.builder(
+        physics: new NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
+        shrinkWrap: true,
+        itemCount: shelfitems.length + 1,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          childAspectRatio: 200 / 340,
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          if (index == shelfitems.length) {
+            return InkWell(
+              onTap: () {
+                widget.navigateToStore(1);
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.0),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                  size: 100.0,
+                ),
               ),
-            ),
-          );
-        } else {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0),
-            child: BookItem(
-              materialobj: shelfitems[index],
-            ),
-          );
-        }
-      },
-    );
+            );
+          } else {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
+              child: BookItem(
+                materialobj: shelfitems[index],
+              ),
+            );
+          }
+        },
+      ),
+    ]);
   }
 }

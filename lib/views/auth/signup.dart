@@ -61,8 +61,7 @@ class _SignupPageState extends State<SignupPage> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
       child: CircleAvatar(
-        backgroundColor: Colors.brown.shade800,
-        child: Text(''),
+        child: Image.asset("assets/images/atrons_log.png"),
         radius: 70,
       ),
     );

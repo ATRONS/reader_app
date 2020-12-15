@@ -1,5 +1,6 @@
 import 'package:atrons_mobile/providers/detail_provider.dart';
 import 'package:atrons_mobile/utils/constants.dart';
+import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/views/payment/payment.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ class Purchase extends StatefulWidget {
 }
 
 class _PurchaseState extends State<Purchase> {
-  String _buyRentValue = "buy";
+  // String _buyRentValue = "buy";
 
   @override
   Widget build(BuildContext context) {
@@ -104,51 +105,52 @@ class _PurchaseState extends State<Purchase> {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text(
-                "Choose Purchase Option",
-                style: TextStyle(fontSize: 17),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-              child: Row(
-                children: <Widget>[
-                  Radio(
-                    value: "buy",
-                    activeColor: Colors.blue,
-                    groupValue: _buyRentValue,
-                    onChanged: (value) => setState(
-                      () => _buyRentValue = value,
-                    ),
-                  ),
-                  Text(
-                    "Buy",
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              child: _buyRentValue == "rent"
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 8.0),
-                      child: Text(
-                        "number of days",
-                        style: TextStyle(
-                            fontSize: 16.0, color: Colors.grey.shade600),
-                      ),
-                    )
-                  : Container(),
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            //   child: Text(
+            //     "Choose Purchase Option",
+            //     style: TextStyle(fontSize: 17),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+            //   child: Row(
+            //     children: <Widget>[
+            //       Radio(
+            //         value: "buy",
+            //         activeColor: Colors.blue,
+            //         groupValue: _buyRentValue,
+            //         onChanged: (value) => setState(
+            //           () => _buyRentValue = value,
+            //         ),
+            //       ),
+            //       Text(
+            //         "Buy",
+            //         style: TextStyle(fontWeight: FontWeight.w600),
+            //       )
+            //     ],
+            //   ),
+            // ),
+            // Container(
+            //   child: _buyRentValue == "rent"
+            //       ? Padding(
+            //           padding: const EdgeInsets.symmetric(
+            //               horizontal: 8.0, vertical: 8.0),
+            //           child: Text(
+            //             "number of days",
+            //             style: TextStyle(
+            //                 fontSize: 16.0, color: Colors.grey.shade600),
+            //           ),
+            //         )
+            //       : Container(),
+            //   width: double.infinity,
+            //   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            //   decoration: BoxDecoration(
+            //     color: Colors.grey.shade200,
+            //     borderRadius: BorderRadius.circular(8.0),
+            //   ),
+            // ),
+            addVerticalSpace(15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

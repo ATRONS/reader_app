@@ -52,17 +52,7 @@ class _DetailsState extends State<Details> {
         return true;
       },
       child: Scaffold(
-          appBar: AppBar(
-            actions: <Widget>[
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.favorite,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-              )
-            ],
-          ),
+          appBar: AppBar(),
           body: Selector<DetailProvider, LoadingState>(
               selector: (context, model) => model.loadingState,
               builder: (context, state, child) {

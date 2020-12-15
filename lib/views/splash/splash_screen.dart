@@ -55,9 +55,7 @@ class _SplashState extends State<SplashScreen> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Text(
-            "This is supposed to be the splash screen",
-          ),
+          child: Image.asset("assets/images/atrons_log.png"),
         ),
       ),
     );
