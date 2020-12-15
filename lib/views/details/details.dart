@@ -106,7 +106,8 @@ class _DetailsState extends State<Details> {
         DescriptionTextWidget(text: detail.synopsis),
         _buildTagsSection(detail.tags),
         _buildMoreBook(detail.moreFromAuthor),
-        _buildRateThis(detail.reviews, detail.readersLastRating, detail.id),
+        if (detail.owned)
+          _buildRateThis(detail.reviews, detail.readersLastRating, detail.id),
         _buildSectionReview(detail.reviews),
       ],
     );
@@ -171,12 +172,23 @@ class _DetailsState extends State<Details> {
                 SizedBox(height: 5.0),
                 Material(
                   type: MaterialType.transparency,
-                  child: Text(
-                    '${Constants.rating} ${detail.rating['value']}',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                    maxLines: 3,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('${Constants.rating}'),
+                      SmoothStarRating(
+                          allowHalfRating: false,
+                          onRated: (v) {},
+                          starCount: 5,
+                          rating: detail.rating['value'].toDouble(),
+                          size: 20.0,
+                          isReadOnly: true,
+                          filledIconData: Icons.star,
+                          halfFilledIconData: Icons.star_half,
+                          color: Colors.green,
+                          borderColor: Colors.green,
+                          spacing: 0.0),
+                    ],
                   ),
                 ),
                 SizedBox(height: 10.0),
@@ -226,40 +238,10 @@ class _DetailsState extends State<Details> {
                 SizedBox(height: 20.0),
                 Center(
                   child: Container(
-                    color: Theme.of(context).accentColor,
-                    width: MediaQuery.of(context).size.width,
-                    child: Selector<DetailProvider, bool>(
-                      selector: (ctx, model) => model.isDownloaded,
-                      builder: (context, isDownloaded, child) {
-                        final materialProvider = Provider.of<MaterialProvider>(
-                            context,
-                            listen: false);
-
-                        final openMaterialBtn = FlatButton(
-                          padding: const EdgeInsets.all(15),
-                          onPressed: () => materialProvider.openMaterial(
-                              context, detailProvider.selectedMaterial.id),
-                          child: Text(
-                            Constants.open,
-                            style: Style.whiteText,
-                          ),
-                        );
-
-                        final downloadBtn = FlatButton(
-                          onPressed: () {
-                            MyRouter.pushPage(context, Purchase());
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text(
-                              Constants.buyRent,
-                              style: Style.whiteText,
-                            ),
-                          ),
-                        );
-
-                        if (!isDownloaded) {
-                          return FutureBuilder(
+                      color: Theme.of(context).accentColor,
+                      width: MediaQuery.of(context).size.width,
+                      child: detailProvider.selectedMaterial.owned
+                          ? FutureBuilder(
                               future: fileExistsInAppDir(
                                   detailProvider.selectedMaterial.id),
                               builder: (ctx, snapshot) {
@@ -268,19 +250,59 @@ class _DetailsState extends State<Details> {
                                       child: CircularProgressIndicator());
                                 }
 
-                                if (snapshot.data) return openMaterialBtn;
-                                return downloadBtn;
-                              });
-                        }
-                        return openMaterialBtn;
-                      },
-                    ),
-                  ),
+                                if (snapshot.data)
+                                  return _buildOpenButton(context);
+                                return _buildDownloadButton(context);
+                              })
+                          : _buildBuyButton(context)),
                 ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBuyButton(BuildContext context) {
+    return FlatButton(
+      onPressed: () {
+        MyRouter.pushPage(context, Purchase());
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Text(
+          Constants.buyRent,
+          style: Style.whiteText,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOpenButton(BuildContext context) {
+    final materialProvider =
+        Provider.of<MaterialProvider>(context, listen: false);
+    final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+    return FlatButton(
+      padding: const EdgeInsets.all(15),
+      onPressed: () => materialProvider.openMaterial(
+          context, detailProvider.selectedMaterial.id),
+      child: Text(
+        Constants.open,
+        style: Style.whiteText,
+      ),
+    );
+  }
+
+  Widget _buildDownloadButton(BuildContext context) {
+    final detailProvider = Provider.of<DetailProvider>(context, listen: false);
+
+    return FlatButton(
+      padding: const EdgeInsets.all(15),
+      onPressed: () => detailProvider.downloadFile(context),
+      child: Text(
+        "Download",
+        style: Style.whiteText,
       ),
     );
   }
@@ -449,29 +471,32 @@ class _DetailsState extends State<Details> {
   }
 
   _buildSectionReview(List<Review> comments) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        addVerticalSpace(30),
-        _buildSectionTitleWithMore('Reviews'),
-        _buildDivider(),
-        addVerticalSpace(10),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: comments.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.0),
-              child: MaterialReview(
-                  firstname: comments[index].username['firstname'],
-                  lastname: comments[index].username['lastname'],
-                  comment: comments[index].comment,
-                  stars: comments[index].starvalue),
-            );
-          },
-        ),
-      ],
-    );
+    print(comments.length);
+    return comments.length == 0
+        ? Container()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              addVerticalSpace(30),
+              _buildSectionTitleWithMore('Reviews'),
+              _buildDivider(),
+              addVerticalSpace(10),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: comments.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5.0),
+                    child: MaterialReview(
+                        firstname: comments[index].username['firstname'],
+                        lastname: comments[index].username['lastname'],
+                        comment: comments[index].comment,
+                        stars: comments[index].starvalue),
+                  );
+                },
+              ),
+            ],
+          );
   }
 }
