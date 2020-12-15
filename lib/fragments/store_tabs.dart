@@ -6,6 +6,7 @@ import 'package:atrons_mobile/utils/constants.dart';
 import 'package:atrons_mobile/providers/loading_state.dart';
 import 'package:atrons_mobile/providers/material_provider.dart';
 import 'package:atrons_mobile/utils/styles.dart';
+import 'package:atrons_mobile/views/genres/booksInGenre.dart';
 import 'package:atrons_mobile/views/genres/listOfGenre.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -123,10 +124,12 @@ class _BooktabState extends State<Booktab> {
                     Radius.circular(20.0),
                   ),
                   onTap: () {
-                    // MyRouter.pushPage(
-                    //   context,
-                    //   BooksInGenre(title: generes[index].name),
-                    // );
+                    MyRouter.pushPage(
+                      context,
+                      BooksInGenre(
+                          title: generes[index].name,
+                          genreid: generes[index].id),
+                    );
                   },
                   child: Center(
                     child: Padding(
