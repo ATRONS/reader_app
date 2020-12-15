@@ -32,3 +32,12 @@ String formatIsoDate(String date) {
 
   return dd.toString() + "/" + mm.toString() + "/" + yyyy.toString();
 }
+
+bool isValidPhoneNumber(String phoneNum) {
+  if (phoneNum.startsWith("+251")) {
+    if (phoneNum.length == 13) return true;
+  } else if (phoneNum.startsWith("09")) {
+    if (phoneNum.length == 10) return true;
+  }
+  return false;
+}

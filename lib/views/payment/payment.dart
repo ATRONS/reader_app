@@ -1,4 +1,9 @@
+import 'package:atrons_mobile/providers/detail_provider.dart';
+import 'package:atrons_mobile/providers/loading_state.dart';
+import 'package:atrons_mobile/providers/material_provider.dart';
+import 'package:atrons_mobile/utils/helper_funcs.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PaymentPage extends StatefulWidget {
   @override
@@ -7,6 +12,7 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   int _selectedPaymentIndex;
+  String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +24,7 @@ class _PaymentPageState extends State<PaymentPage> {
         child: GridView.count(
           crossAxisCount: 2,
           children: List.generate(
-            3,
+            1,
             (index) {
               return Center(
                 child: InkWell(
@@ -80,21 +86,72 @@ class _PaymentPageState extends State<PaymentPage> {
                     Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        "Enter Phone-Number",
+                        "Enter Phone Number",
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: TextFormField(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RaisedButton(
-                        child: Text("Submit"),
-                        onPressed: () {},
+                      child: TextField(
+                        decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 3.0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 3.0),
+                            ),
+                            hintText: 'phone'),
+                        keyboardType: TextInputType.phone,
+                        onChanged: (value) {
+                          phoneNumber = value;
+                        },
                       ),
-                    )
+                    ),
+                    InkWell(
+                        onTap: () async {
+                          if (isValidPhoneNumber(phoneNumber)) {
+                            final materialSelected =
+                                Provider.of<DetailProvider>(context,
+                                        listen: false)
+                                    .selectedMaterial;
+
+                            final materialProvider =
+                                Provider.of<MaterialProvider>(context,
+                                    listen: false);
+                            final paymentmade =
+                                await materialProvider.purchaseMaterial(
+                                    materialSelected.id, phoneNumber);
+
+                            print(paymentmade);
+                          }
+                        },
+                        child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 50,
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Theme.of(context).accentColor),
+                              child: Center(
+                                  child:
+                                      Selector<MaterialProvider, LoadingState>(
+                                          selector: (context, model) =>
+                                              model.purchaseLoadingState,
+                                          builder: (context, state, child) {
+                                            if (state == LoadingState.loading) {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                              //     Text(
+                                              //   "Submit",
+                                              //   style: TextStyle(color: Colors.white),
+                                              // ),
+                                            }
+                                          })),
+                            ))),
                   ],
                 ),
               ),

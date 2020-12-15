@@ -40,6 +40,8 @@ class MaterialProvider extends ChangeNotifier {
   LoadingState newspapaerLoadingState = LoadingState.loading;
   LoadingState materialListLoadingState = LoadingState.loading;
 
+  LoadingState purchaseLoadingState = LoadingState.uninitialized;
+
   void loadInitialData() {
     _api.getInitialData().then((Response response) {
       final Map<String, dynamic> body = response.data;
@@ -130,6 +132,24 @@ class MaterialProvider extends ChangeNotifier {
           .toList();
     } catch (err) {
       return [];
+    }
+  }
+
+  Future<String> purchaseMaterial(
+      String purchaseMaterialId, String phoneNumber) async {
+    purchaseLoadingState = LoadingState.loading;
+    notifyListeners();
+    try {
+      final response = await _api
+          .purchaseMaterial(purchaseMaterialId, {'phone': phoneNumber});
+      final Map<String, dynamic> body = response.data;
+
+      purchaseLoadingState = LoadingState.success;
+      notifyListeners();
+      return body['data']['code'];
+    } catch (err) {
+      purchaseLoadingState = LoadingState.failed;
+      return "";
     }
   }
 

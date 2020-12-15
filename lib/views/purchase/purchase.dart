@@ -97,27 +97,6 @@ class _PurchaseState extends State<Purchase> {
                             ),
                           ),
                           SizedBox(height: 5.0),
-                          Material(
-                            type: MaterialType.transparency,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  Constants.rentPrice,
-                                  style: TextStyle(
-                                    fontSize: 14.0,
-                                  ),
-                                  maxLines: 3,
-                                ),
-                                Text(
-                                  '${material.price['rent']['value']} ${Constants.rentPer}',
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -146,25 +125,6 @@ class _PurchaseState extends State<Purchase> {
                   ),
                   Text(
                     "Buy",
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-              child: Row(
-                children: <Widget>[
-                  Radio(
-                    value: "rent",
-                    activeColor: Colors.blue,
-                    groupValue: _buyRentValue,
-                    onChanged: (value) => setState(
-                      () => _buyRentValue = value,
-                    ),
-                  ),
-                  Text(
-                    "Rent",
                     style: TextStyle(fontWeight: FontWeight.w600),
                   )
                 ],

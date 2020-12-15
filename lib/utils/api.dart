@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 class Api {
   static final Dio _dio = Dio();
   // 192.168.43.240
-  static String baseUrl = 'http://192.168.43.186:5000/api/v1';
+  static String baseUrl = 'http://192.168.43.157:5000/api/v1';
   static String readerBaseUrl = baseUrl + '/reader';
   static String mediaBaseUrl = baseUrl + '/media';
 
@@ -46,6 +46,12 @@ class Api {
   Future<Response> searchMaterial(String query, String querytype) {
     final url = '$materialsUrl?search=$query&type=$querytype';
     return _dio.get(url);
+  }
+
+  Future<Response> purchaseMaterial(
+      String materialId, Map<String, String> phone) {
+    final purchaseUrl = materialsUrl + "/" + materialId + "/purchase";
+    return _dio.post(purchaseUrl, data: phone);
   }
 
   Future<Response> rateMaterial(int value, String rating, String id) {

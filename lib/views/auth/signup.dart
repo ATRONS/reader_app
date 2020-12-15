@@ -7,8 +7,6 @@ import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../home_screen.dart';
-
 class SignupPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _SignupPageState();
