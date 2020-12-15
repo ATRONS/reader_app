@@ -7,7 +7,7 @@ class Constants {
   static String rating = 'Rating';
   static String currency = 'ETB';
   static String rentPer = 'ETB/Day';
-  static String buyRent = 'Buy/Rent';
+  static String buyRent = 'Buy';
   static String seeAll = 'See All';
   static String generes = 'Genres';
   static String loadingFailed = 'Loading failed';
