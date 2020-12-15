@@ -40,8 +40,6 @@ class MaterialProvider extends ChangeNotifier {
   LoadingState newspapaerLoadingState = LoadingState.loading;
   LoadingState materialListLoadingState = LoadingState.loading;
 
-  LoadingState purchaseLoadingState = LoadingState.uninitialized;
-
   void loadInitialData() {
     _api.getInitialData().then((Response response) {
       final Map<String, dynamic> body = response.data;
@@ -104,6 +102,18 @@ class MaterialProvider extends ChangeNotifier {
     });
   }
 
+  Future<List<MaterialDetail>> ownedMaterialsRequest() async {
+    final response = await _api.getOwenedMaterial();
+    final Map<String, dynamic> body = response.data;
+
+    return List.from(body['data']).map((json) {
+      json['more_from_provider'] = {'materials': []};
+      json['provider'] = {'empty': 'value'};
+      json['material_ratings'] = {'ratings': []};
+      return MaterialDetail.fromJSON(json);
+    }).toList();
+  }
+
   void loadNewsPapers() async {
     _api.getProviders("NEWSPAPER").then((Response res) {
       print(res.data);
@@ -135,20 +145,28 @@ class MaterialProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<MiniMaterial>> findInGenre(String genreId) async {
+    try {
+      final response = await _api.findBooksFromGenre(genreId);
+      final Map<String, dynamic> body = response.data;
+
+      return List.from(body['data']['materials'])
+          .map((json) => MiniMaterial.fromJSON(json))
+          .toList();
+    } catch (err) {
+      return [];
+    }
+  }
+
   Future<String> purchaseMaterial(
       String purchaseMaterialId, String phoneNumber) async {
-    purchaseLoadingState = LoadingState.loading;
-    notifyListeners();
     try {
       final response = await _api
           .purchaseMaterial(purchaseMaterialId, {'phone': phoneNumber});
       final Map<String, dynamic> body = response.data;
 
-      purchaseLoadingState = LoadingState.success;
-      notifyListeners();
       return body['data']['code'];
     } catch (err) {
-      purchaseLoadingState = LoadingState.failed;
       return "";
     }
   }
