@@ -20,6 +20,7 @@ class Api {
   static String logoutUrl = readerBaseUrl + '/logout';
   static String verifyUrl = readerBaseUrl + '/verifyEmail';
   static String ownedUrl = materialsUrl + '/owned';
+  static String wishListUrl = readerBaseUrl + '/wishlist';
 
   static setAuthToken(String token) {
     _dio.options.headers['content-Type'] = 'application/json';
@@ -65,6 +66,14 @@ class Api {
   Future<Response> getOwenedMaterial() {
     return _dio.get(ownedUrl);
   }
+
+  // Future<Response> getWishlists() {
+  //   return _dio.get(wishListUrl);
+  // }
+
+  // Future<Response> makeFavorite(Map<String, dynamic> materialID) {
+  //   return _dio.post(wishListUrl, data: materialID);
+  // }
 
   Future<Response> rateMaterial(int value, String rating, String id) {
     return _dio.put('$materialsUrl/$id/ratings',

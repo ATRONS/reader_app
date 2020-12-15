@@ -158,6 +158,32 @@ class MaterialProvider extends ChangeNotifier {
     }
   }
 
+  // Future<List<MiniMaterial>> getWishListRequest() async {
+  //   try {
+  //     final response = await _api.getWishlists();
+  //     final Map<String, dynamic> body = response.data;
+
+  //     return List.from(body['data']['materials'])
+  //         .map((json) => MiniMaterial.fromJSON(json))
+  //         .toList();
+  //   } catch (err) {
+  //     return [];
+  //   }
+  // }
+
+  // Future<List<MiniMaterial>> makeWishListRequest(String materialID) async {
+  //   try {
+  //     final response = await _api.makeFavorite({"material": materialID});
+  //     final Map<String, dynamic> body = response.data;
+
+  //     return List.from(body['data']['materials'])
+  //         .map((json) => MiniMaterial.fromJSON(json))
+  //         .toList();
+  //   } catch (err) {
+  //     return [];
+  //   }
+  // }
+
   Future<String> purchaseMaterial(
       String purchaseMaterialId, String phoneNumber) async {
     try {

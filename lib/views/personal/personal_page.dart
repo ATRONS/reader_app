@@ -22,11 +22,6 @@ class _PersonalPageState extends State<PersonalPage> {
     super.initState();
     items = [
       {
-        'icon': Feather.heart,
-        'title': 'WishList',
-        'function': () => _pushPage(Favorites()),
-      },
-      {
         'icon': Feather.shopping_cart,
         'title': 'Purchased',
         'function': () => _pushPage(PurchasedPage()),
