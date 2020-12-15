@@ -4,8 +4,10 @@ import 'package:dio/dio.dart';
 
 class Api {
   static final Dio _dio = Dio();
-  // 192.168.43.240
-  static String baseUrl = 'http://192.168.43.157:5000/api/v1';
+
+  // static String baseUrl = 'http://192.168.43.157:5000/api/v1';
+  static String baseUrl =
+      'http://ec2-3-126-51-124.eu-central-1.compute.amazonaws.com/api/v1';
   static String readerBaseUrl = baseUrl + '/reader';
   static String mediaBaseUrl = baseUrl + '/media';
 
@@ -17,6 +19,7 @@ class Api {
   static String loginUrl = readerBaseUrl + '/login';
   static String logoutUrl = readerBaseUrl + '/logout';
   static String verifyUrl = readerBaseUrl + '/verifyEmail';
+  static String ownedUrl = materialsUrl + '/owned';
 
   static setAuthToken(String token) {
     _dio.options.headers['content-Type'] = 'application/json';
@@ -48,10 +51,19 @@ class Api {
     return _dio.get(url);
   }
 
+  Future<Response> findBooksFromGenre(String genreId) {
+    final url = '$materialsUrl?tag=$genreId';
+    return _dio.get(url);
+  }
+
   Future<Response> purchaseMaterial(
       String materialId, Map<String, String> phone) {
     final purchaseUrl = materialsUrl + "/" + materialId + "/purchase";
     return _dio.post(purchaseUrl, data: phone);
+  }
+
+  Future<Response> getOwenedMaterial() {
+    return _dio.get(ownedUrl);
   }
 
   Future<Response> rateMaterial(int value, String rating, String id) {
