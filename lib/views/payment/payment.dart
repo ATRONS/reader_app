@@ -12,7 +12,6 @@ class PaymentPage extends StatefulWidget {
 
 class _PaymentPageState extends State<PaymentPage> {
   int _selectedPaymentIndex;
-  String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -65,100 +64,165 @@ class _PaymentPageState extends State<PaymentPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: Stack(
-            overflow: Overflow.visible,
-            children: <Widget>[
-              Positioned(
-                right: -40.0,
-                top: -40.0,
-                child: InkResponse(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(),
-                ),
-              ),
-              Form(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        "Enter Phone Number",
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.blue, width: 3.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.blue, width: 3.0),
-                            ),
-                            hintText: 'phone'),
-                        keyboardType: TextInputType.phone,
-                        onChanged: (value) {
-                          phoneNumber = value;
-                        },
-                      ),
-                    ),
-                    InkWell(
-                        onTap: () async {
-                          if (isValidPhoneNumber(phoneNumber)) {
-                            final materialSelected =
-                                Provider.of<DetailProvider>(context,
-                                        listen: false)
-                                    .selectedMaterial;
-
-                            final materialProvider =
-                                Provider.of<MaterialProvider>(context,
-                                    listen: false);
-                            final paymentmade =
-                                await materialProvider.purchaseMaterial(
-                                    materialSelected.id, phoneNumber);
-
-                            print(paymentmade);
-                          }
-                        },
-                        child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: 50,
-                              margin: EdgeInsets.symmetric(horizontal: 20),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Theme.of(context).accentColor),
-                              child: Center(
-                                  child:
-                                      Selector<MaterialProvider, LoadingState>(
-                                          selector: (context, model) =>
-                                              model.purchaseLoadingState,
-                                          builder: (context, state, child) {
-                                            if (state == LoadingState.loading) {
-                                              return Center(
-                                                  child:
-                                                      CircularProgressIndicator());
-                                              //     Text(
-                                              //   "Submit",
-                                              //   style: TextStyle(color: Colors.white),
-                                              // ),
-                                            }
-                                          })),
-                            ))),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
+        return ShowAlertOnPayment();
       },
+    );
+  }
+}
+
+class ShowAlertOnPayment extends StatefulWidget {
+  @override
+  _ShowAlertOnPayment createState() => _ShowAlertOnPayment();
+}
+
+class _ShowAlertOnPayment extends State<ShowAlertOnPayment> {
+  String phoneNumber;
+  String invoiceCode = "";
+  LoadingState purchaseLoadingState = LoadingState.uninitialized;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          Positioned(
+            right: -40.0,
+            top: -40.0,
+            child: InkResponse(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(),
+            ),
+          ),
+          Form(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: purchaseLoadingState == LoadingState.success
+                      ? Column(
+                          children: [
+                            Text(
+                              "Please complete your purchase",
+                            ),
+                            Text("on hello cash."),
+                            Text("your invoice code is")
+                          ],
+                        )
+                      : Text(
+                          "Enter Phone Number",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: purchaseLoadingState == LoadingState.success
+                      ? Text(
+                          "CODE : " + invoiceCode,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 19),
+                        )
+                      : TextField(
+                          decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.blue, width: 3.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.blue, width: 3.0),
+                              ),
+                              hintText: 'phone'),
+                          keyboardType: TextInputType.phone,
+                          onChanged: (value) {
+                            phoneNumber = value;
+                          },
+                        ),
+                ),
+                InkWell(
+                    onTap: () async {
+                      if (isValidPhoneNumber(phoneNumber)) {
+                        setState(() {
+                          purchaseLoadingState = LoadingState.loading;
+                        });
+                        final materialSelected =
+                            Provider.of<DetailProvider>(context, listen: false)
+                                .selectedMaterial;
+
+                        final materialProvider = Provider.of<MaterialProvider>(
+                            context,
+                            listen: false);
+                        final paymentmade = await materialProvider
+                            .purchaseMaterial(materialSelected.id, phoneNumber);
+
+                        if (paymentmade == "") {
+                          setState(() {
+                            invoiceCode = "";
+                            purchaseLoadingState = LoadingState.failed;
+                          });
+                        } else {
+                          setState(() {
+                            invoiceCode = paymentmade;
+                            purchaseLoadingState = LoadingState.success;
+                          });
+                        }
+                      }
+                    },
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 40,
+                          margin: EdgeInsets.symmetric(horizontal: 0),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Theme.of(context).accentColor),
+                          child: Center(
+                              child: purchaseLoadingState ==
+                                      LoadingState.loading
+                                  ? CircularProgressIndicator(
+                                      valueColor:
+                                          AlwaysStoppedAnimation(Colors.white),
+                                    )
+                                  : purchaseLoadingState == LoadingState.success
+                                      ? InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Container(
+                                                height: 50,
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                                child: Center(
+                                                    child: Text(
+                                                  "Ok",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                )),
+                                              )))
+                                      : Text("Submit",
+                                          style:
+                                              TextStyle(color: Colors.white))),
+                        ))),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
