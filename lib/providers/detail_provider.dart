@@ -89,16 +89,16 @@ class DetailProvider extends ChangeNotifier {
   }
 
   void setMaterialRating(int value, String rating, String id) {
-    _loadingState = LoadingState.uninitialized;
+    setRatingState = LoadingState.uninitialized;
     _api.rateMaterial(value, rating, id).then((Response res) async {
       final Map<String, dynamic> body = res.data;
 
       if (!body['success']) {
         print(body['message']);
-        _loadingState = LoadingState.failed;
+        setRatingState = LoadingState.failed;
         return notifyListeners();
       }
-      _loadingState = LoadingState.success;
+      setRatingState = LoadingState.success;
       _selectedMaterial.readersLastRating = {
         "value": value,
         "description": rating
@@ -106,7 +106,7 @@ class DetailProvider extends ChangeNotifier {
       return notifyListeners();
     }).catchError((err) {
       print(err);
-      _loadingState = LoadingState.failed;
+      setRatingState = LoadingState.failed;
       return notifyListeners();
     });
   }
@@ -125,5 +125,14 @@ class DetailProvider extends ChangeNotifier {
 
   void setReadersLastRating(Map<String, dynamic> rating) {
     _selectedMaterial.readersLastRating = rating;
+  }
+
+  void resetStateAndReloadDetail() {
+    final id = _selectedMaterial.id;
+    _loadingState = LoadingState.loading;
+    _selectedMaterial = null;
+    setRatingState = LoadingState.uninitialized;
+    notifyListeners();
+    getMaterialDetail(id);
   }
 }
