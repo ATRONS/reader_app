@@ -51,6 +51,8 @@ class MaterialDetail {
 
   int pages, edition;
 
+  bool owned;
+
   Map<String, dynamic> file, provider, price, rating, readersLastRating;
 
   List<Genere> tags;
@@ -74,6 +76,7 @@ class MaterialDetail {
         publishedDate = json['published_date'],
         price = json['price'],
         rating = json['rating'],
+        owned = json['owned'],
         tags = List<dynamic>.from(json['tags'])
             .map((each) => Genere.fromJSON(each))
             .toList(),
