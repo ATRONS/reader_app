@@ -1,5 +1,7 @@
 import 'package:atrons_mobile/models/genere.dart';
 import 'package:atrons_mobile/providers/material_provider.dart';
+import 'package:atrons_mobile/utils/router.dart';
+import 'package:atrons_mobile/views/genres/booksInGenre.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,8 +34,14 @@ class ListOfGenre extends StatelessWidget {
           itemCount: generes.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              onTap: () {},
-              title: Text(generes[index].getGenereName(GenereLang.amharic)),
+              onTap: () {
+                MyRouter.pushPage(
+                  context,
+                  BooksInGenre(
+                      title: generes[index].name, genreid: generes[index].id),
+                );
+              },
+              title: Text(generes[index].getGenereName(GenereLang.english)),
             );
           },
           separatorBuilder: (BuildContext context, int index) {
