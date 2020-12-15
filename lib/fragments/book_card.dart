@@ -11,6 +11,7 @@ class BookCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 120.0,
+      height: 150.0,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
