@@ -27,6 +27,10 @@ class DetailProvider extends ChangeNotifier {
   bool _isDownloaded = false;
   bool get isDownloaded => _isDownloaded;
 
+  void setSelectedMaterial(MaterialDetail material) {
+    _selectedMaterial = material;
+  }
+
   Future downloadFile(BuildContext context) async {
     PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
