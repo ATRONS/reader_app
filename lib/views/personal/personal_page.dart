@@ -1,11 +1,10 @@
 import 'package:atrons_mobile/providers/user_provider.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
-import 'package:atrons_mobile/views/verification/verification_page.dart';
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../utils/router.dart';
 import '../../providers/app_provider.dart';
-import '../downloads/downloads.dart';
+import '../purchasedMaterial/purchased_Page.dart';
 import '../favorites/favorites.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:provider/provider.dart';
@@ -24,18 +23,13 @@ class _PersonalPageState extends State<PersonalPage> {
     items = [
       {
         'icon': Feather.heart,
-        'title': 'Favorites',
+        'title': 'WishList',
         'function': () => _pushPage(Favorites()),
       },
       {
-        'icon': Feather.heart,
-        'title': 'To Purchase',
-        'function': () => _pushPage(VerificationPage()),
-      },
-      {
-        'icon': Feather.download,
-        'title': 'Downloads',
-        'function': () => _pushPage(Downloads()),
+        'icon': Feather.shopping_cart,
+        'title': 'Purchased',
+        'function': () => _pushPage(PurchasedPage()),
       },
       {
         'icon': Feather.moon,
@@ -46,11 +40,6 @@ class _PersonalPageState extends State<PersonalPage> {
         'icon': Feather.info,
         'title': 'About',
         'function': () => showAbout(),
-      },
-      {
-        'icon': Feather.file_text,
-        'title': 'Licenses',
-        'function': () => _pushPageDialog(LicensePage()),
       },
       {
         'icon': Feather.log_out,
@@ -146,7 +135,7 @@ class _PersonalPageState extends State<PersonalPage> {
             'About',
           ),
           content: Text(
-            'eBook app by Atrons',
+            'Atrons digital print media and repository platform',
           ),
           actions: <Widget>[
             FlatButton(
