@@ -80,26 +80,19 @@ class MaterialProvider extends ChangeNotifier {
     });
   }
 
-  void loadListOfCompanyMaterials(String materialId) {
-    _api.getMaterialsByProvider(materialId).then((Response response) {
-      final Map<String, dynamic> body = response.data;
+  Future<List<MiniMaterial>> loadListOfCompanyMaterials(
+      String materialId) async {
+    final response = await _api.getMaterialsByProvider(materialId);
+    final Map<String, dynamic> body = response.data;
 
-      if (!body['success']) {
-        materialListLoadingState = LoadingState.failed;
-        return notifyListeners();
-      }
-
-      _listOfCompanyMaterials = List.from(body['data']['materials'])
-          .map((json) => MiniMaterial.fromJSON(json))
-          .toList();
-
-      materialListLoadingState = LoadingState.success;
-      return notifyListeners();
-    }).catchError((err) {
+    if (!body['success']) {
       materialListLoadingState = LoadingState.failed;
-      print(err);
-      return notifyListeners();
-    });
+      return [];
+    }
+
+    return List.from(body['data']['materials'])
+        .map((json) => MiniMaterial.fromJSON(json))
+        .toList();
   }
 
   Future<List<MaterialDetail>> ownedMaterialsRequest() async {
