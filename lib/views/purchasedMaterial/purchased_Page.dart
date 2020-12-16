@@ -108,6 +108,7 @@ class _PurchasedPageState extends State<PurchasedPage> {
                                       margin:
                                           EdgeInsets.only(left: 10, right: 5),
                                       height: 80,
+                                      width: 60,
                                       child:
                                           Image.network(material.coverImgUrl),
                                     ),
