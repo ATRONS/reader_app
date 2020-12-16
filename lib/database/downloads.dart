@@ -51,10 +51,10 @@ class DownloadsDB {
     return val;
   }
 
-  void clear() async {
+  Future<void> clear() async {
     final db = ObjectDB(await getPath());
-    db.open();
-    db.remove({});
-    db.close();
+    await db.open();
+    await db.remove({});
+    await db.close();
   }
 }
