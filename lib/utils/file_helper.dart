@@ -29,3 +29,18 @@ Future<bool> fileExistsInAppDir(String filename) async {
   final file = File(path);
   return await file.exists();
 }
+
+Future<void> clearAppAndTempDirs() async {
+  Directory appDocDir = Platform.isAndroid
+      ? await getExternalStorageDirectory()
+      : await getApplicationDocumentsDirectory();
+  final tempDir = await getTemporaryDirectory();
+
+  if (appDocDir.existsSync()) {
+    appDocDir.deleteSync(recursive: true);
+  }
+
+  if (tempDir.existsSync()) {
+    tempDir.deleteSync(recursive: true);
+  }
+}
