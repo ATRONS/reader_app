@@ -1,7 +1,9 @@
+import 'package:atrons_mobile/database/downloads.dart';
 import 'package:atrons_mobile/database/readers.dart';
 import 'package:atrons_mobile/models/user.dart';
 import 'package:atrons_mobile/providers/app_provider.dart';
 import 'package:atrons_mobile/utils/api.dart';
+import 'package:atrons_mobile/utils/file_helper.dart';
 import 'package:atrons_mobile/utils/router.dart';
 import 'package:atrons_mobile/views/auth/login.dart';
 import 'package:atrons_mobile/views/home_screen.dart';
@@ -16,6 +18,7 @@ class UserProvider extends ChangeNotifier {
   User get user => _user;
   final _api = Api();
   final _readersDB = UsersDB();
+  final _downloadsDB = DownloadsDB();
   AuthenticationState signupStatus = AuthenticationState.unAuthenticated;
   AuthenticationState loginStatus = AuthenticationState.unAuthenticated;
 
@@ -74,6 +77,8 @@ class UserProvider extends ChangeNotifier {
     final appProvider = Provider.of<AppProvider>(ctx, listen: false);
     await _api.logoutReader().catchError((err) => print(err));
     await _readersDB.removeUser();
+    await _downloadsDB.clear();
+    await clearAppAndTempDirs();
     await appProvider.setAppState(AppState.LOGGED_OUT);
     MyRouter.pushPageReplacement(ctx, LoginPage());
   }
